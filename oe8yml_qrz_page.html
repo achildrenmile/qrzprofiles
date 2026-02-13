@@ -1,0 +1,593 @@
+<style>
+/* === OE8YML QRZ Bio === */
+@keyframes onair{0%,100%{box-shadow:0 0 4px #e22,0 0 8px #e22}50%{box-shadow:0 0 8px #e22,0 0 20px #e22,0 0 40px rgba(255,34,34,.3)}}
+@keyframes glow{0%,100%{text-shadow:0 0 10px rgba(230,168,23,.4)}50%{text-shadow:0 0 25px rgba(230,168,23,.7),0 0 50px rgba(230,168,23,.2)}}
+
+.oe8y *{box-sizing:border-box;margin:0;padding:0}
+.oe8y{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+  background:#0d1117;color:#e6edf3;max-width:920px;margin:0 auto;
+  padding:20px;border-radius:14px;line-height:1.6;
+  box-shadow:0 4px 40px rgba(0,0,0,.4);
+}
+.oe8y a{color:#58a6ff;text-decoration:none}
+.oe8y a:hover{text-decoration:underline}
+.oe8y a.oe8y-rxbtn,.oe8y a.oe8y-fbtn{color:#0d1117}
+.oe8y a.oe8y-rxbtn:hover,.oe8y a.oe8y-fbtn:hover{color:#0d1117;text-decoration:none}
+
+/* --- Hero --- */
+.oe8y-hero{
+  background:
+    linear-gradient(rgba(230,168,23,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(230,168,23,.03) 1px,transparent 1px),
+    linear-gradient(135deg,#0d1117 0%,#141c28 50%,#1a1f2e 100%);
+  background-size:24px 24px,24px 24px,100% 100%;
+  border:1px solid #30363d;border-radius:12px;
+  padding:40px 24px;text-align:center;margin-bottom:16px;
+  position:relative;overflow:hidden;
+}
+.oe8y-hero::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,#e6a817 20%,#ff4444 50%,#e6a817 80%,transparent);
+}
+.oe8y-hero::after{
+  content:'';position:absolute;bottom:0;left:15%;right:15%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(230,168,23,.4),transparent);
+}
+.oe8y-onair{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,34,34,.08);border:1px solid rgba(255,34,34,.25);
+  border-radius:20px;padding:5px 18px;margin-bottom:24px;
+  font-size:.7rem;letter-spacing:3px;color:#ff4444;
+  font-family:'Courier New',monospace;
+}
+.oe8y-onair i{
+  width:8px;height:8px;border-radius:50%;background:#e22;
+  display:inline-block;animation:onair 2s ease-in-out infinite;
+}
+.oe8y-call{
+  font-family:'Courier New','Lucida Console',monospace;
+  font-size:4.2rem;font-weight:900;letter-spacing:10px;
+  color:#e6a817;animation:glow 3s ease-in-out infinite;margin:8px 0;
+}
+.oe8y-phon{font-size:.95rem;color:#8b949e;letter-spacing:2px;margin-bottom:12px}
+.oe8y-ms{
+  font-family:'Courier New',monospace;color:#e6a817;
+  letter-spacing:8px;font-size:1.1rem;margin:16px 0;opacity:.5;
+}
+.oe8y-hinf{
+  display:flex;justify-content:center;gap:8px 24px;flex-wrap:wrap;
+  font-size:.85rem;color:#8b949e;
+}
+.oe8y-hinf span{
+  background:rgba(255,255,255,.04);padding:3px 12px;border-radius:6px;
+  border:1px solid rgba(255,255,255,.06);
+}
+.oe8y-tag{font-style:italic;color:#6e7681;margin-top:16px;font-size:.88rem}
+
+/* --- Grid --- */
+.oe8y-g{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.oe8y-g1{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:16px}
+
+/* --- Cards --- */
+.oe8y-c{
+  background:#161b22;border:1px solid #30363d;border-radius:12px;
+  padding:22px;transition:border-color .3s;
+}
+.oe8y-c:hover{border-color:#e6a817}
+.oe8y-ch{
+  display:flex;align-items:center;gap:10px;margin-bottom:14px;
+  padding-bottom:10px;border-bottom:1px solid #21262d;
+}
+.oe8y-ci{
+  width:30px;height:30px;border-radius:8px;display:inline-flex;
+  align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;
+}
+.oe8y-ct{
+  font-size:.85rem;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:#e6edf3;
+}
+.ia{background:rgba(230,168,23,.15);color:#e6a817}
+.ig{background:rgba(63,185,80,.15);color:#3fb950}
+.ib{background:rgba(88,166,255,.15);color:#58a6ff}
+.ir{background:rgba(255,68,68,.15);color:#ff4444}
+
+/* --- About --- */
+.oe8y-about{display:flex;gap:20px;align-items:flex-start}
+.oe8y-photo{
+  width:110px;height:110px;border-radius:12px;object-fit:cover;
+  border:2px solid #30363d;flex-shrink:0;
+}
+.oe8y-atxt{flex:1}
+.oe8y-atxt p{margin-bottom:8px;color:#c9d1d9;font-size:.88rem}
+.oe8y-contact{
+  margin-top:12px;padding-top:12px;border-top:1px solid #21262d;
+}
+.oe8y-contact div{
+  display:flex;align-items:center;gap:8px;padding:4px 0;
+  color:#8b949e;font-size:.85rem;
+}
+.oe8y-contact div span:first-child{
+  width:22px;text-align:center;flex-shrink:0;
+}
+
+/* --- Badges --- */
+.oe8y-bg{display:flex;flex-wrap:wrap;gap:6px}
+.oe8y-b{
+  display:inline-block;padding:4px 10px;border-radius:6px;
+  font-family:'Courier New',monospace;font-size:.78rem;
+  font-weight:600;letter-spacing:.5px;
+}
+.bb{background:rgba(230,168,23,.12);color:#e6a817;border:1px solid rgba(230,168,23,.25)}
+.bv{background:rgba(88,166,255,.12);color:#58a6ff;border:1px solid rgba(88,166,255,.25)}
+.bd{background:rgba(63,185,80,.12);color:#3fb950;border:1px solid rgba(63,185,80,.25)}
+.oe8y-ml{
+  font-size:.7rem;text-transform:uppercase;letter-spacing:1.5px;
+  color:#6e7681;margin-bottom:8px;font-weight:600;
+}
+
+/* --- Iframe --- */
+.oe8y-iw{
+  border-radius:8px;overflow:hidden;border:1px solid #30363d;
+  background:#0d1117;
+}
+.oe8y-iw iframe{width:100%;border:none;display:block}
+
+/* --- Logos --- */
+.oe8y-lg{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));
+  gap:12px;align-items:center;justify-items:center;
+}
+.oe8y-li{
+  background:rgba(255,255,255,.04);border-radius:12px;padding:10px;
+  display:flex;align-items:center;justify-content:center;
+  height:74px;width:100%;transition:background .3s;
+  border:1px solid transparent;
+}
+.oe8y-li:hover{background:rgba(255,255,255,.08);border-color:#30363d}
+.oe8y-li img{max-height:52px;max-width:100%;object-fit:contain}
+
+/* --- QSL --- */
+.oe8y-qg{display:flex;flex-wrap:wrap;gap:10px}
+.oe8y-qb{
+  display:inline-flex;align-items:center;gap:6px;padding:6px 14px;
+  border-radius:8px;font-size:.82rem;font-weight:500;
+}
+.qa{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.2);color:#3fb950}
+.qm{background:rgba(230,168,23,.1);border:1px solid rgba(230,168,23,.2);color:#e6a817}
+
+/* --- WebRX Button --- */
+.oe8y-rxbtn{
+  display:inline-block;padding:12px 28px;
+  background:linear-gradient(135deg,#e6a817,#d4960f);
+  color:#0d1117;text-decoration:none !important;border-radius:8px;
+  font-weight:700;font-size:.88rem;letter-spacing:1px;
+  transition:transform .2s,box-shadow .2s;
+  font-family:'Courier New',monospace;
+}
+.oe8y-rxbtn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 20px rgba(230,168,23,.4);
+  color:#0d1117;text-decoration:none !important;
+}
+
+/* --- Solar widget image --- */
+.oe8y-solar{text-align:center}
+.oe8y-solar img{max-width:100%;border-radius:6px}
+
+/* --- Footer --- */
+.oe8y-ft{text-align:center;padding:28px 20px 10px}
+.oe8y-73{
+  font-family:'Courier New',monospace;font-size:3rem;font-weight:900;
+  color:#e6a817;opacity:.8;line-height:1;
+}
+.oe8y-de{
+  font-family:'Courier New',monospace;color:#6e7681;
+  font-size:.85rem;letter-spacing:3px;margin-top:4px;
+}
+
+/* --- Digital ID table --- */
+.oe8y-dt{width:100%;border-collapse:collapse}
+.oe8y-dt td{padding:6px 10px;font-size:.85rem;border-bottom:1px solid #21262d}
+.oe8y-dt td:first-child{color:#8b949e;white-space:nowrap;width:100px}
+.oe8y-dt td:last-child{color:#e6edf3;font-family:'Courier New',monospace}
+
+/* --- Featured / OERadio --- */
+.oe8y-feat{
+  background:
+    linear-gradient(rgba(230,168,23,.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(230,168,23,.02) 1px,transparent 1px),
+    linear-gradient(135deg,#161b22 0%,#1a1f2e 100%);
+  background-size:24px 24px,24px 24px,100% 100%;
+  border:1px solid rgba(230,168,23,.4);border-radius:12px;
+  padding:34px 30px;text-align:center;margin-bottom:16px;
+  position:relative;overflow:hidden;
+  transition:border-color .3s;
+}
+.oe8y-feat:hover{border-color:#e6a817}
+.oe8y-feat::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,#e6a817,transparent);
+}
+.oe8y-feat::after{
+  content:'';position:absolute;bottom:0;left:20%;right:20%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(230,168,23,.25),transparent);
+}
+.oe8y-fn{
+  font-family:'Courier New',monospace;font-size:2rem;font-weight:900;
+  color:#e6a817;letter-spacing:4px;margin-bottom:8px;
+}
+.oe8y-fs{
+  font-size:1.15rem;color:#e6edf3;margin-bottom:4px;font-weight:500;
+  letter-spacing:.5px;
+}
+.oe8y-fsub{
+  font-size:.88rem;color:#8b949e;font-style:italic;margin-bottom:20px;
+}
+.oe8y-fbtn{
+  display:inline-block;padding:12px 32px;
+  background:linear-gradient(135deg,#e6a817,#d4960f);
+  color:#0d1117;text-decoration:none !important;border-radius:8px;
+  font-weight:700;font-size:.9rem;letter-spacing:1px;
+  transition:transform .2s,box-shadow .2s;
+  font-family:'Courier New',monospace;
+}
+.oe8y-fbtn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 20px rgba(230,168,23,.4);
+  color:#0d1117;text-decoration:none !important;
+}
+.oe8y-flinks{
+  margin-top:14px;display:flex;justify-content:center;gap:20px;
+  flex-wrap:wrap;font-size:.82rem;
+}
+
+/* --- Responsive --- */
+@media(max-width:700px){
+  .oe8y-g{grid-template-columns:1fr}
+  .oe8y-call{font-size:2.6rem;letter-spacing:4px}
+  .oe8y-about{flex-direction:column;align-items:center;text-align:center}
+  .oe8y-photo{width:90px;height:90px}
+  .oe8y{padding:12px}
+}
+</style>
+
+<div class="oe8y">
+
+  <!-- ███ HERO ███ -->
+  <div class="oe8y-hero">
+    <div class="oe8y-onair"><i></i> ON AIR</div>
+    <div class="oe8y-call">OE8YML</div>
+    <div class="oe8y-phon">Oscar Echo Eight &middot; Yet another Markup Language</div>
+    <div class="oe8y-ms">&mdash; &middot; &middot; &middot; &mdash;</div>
+    <div class="oe8y-hinf">
+      <span>&#9678; JN66TO</span>
+      <span>ITU 28</span>
+      <span>CQ 15</span>
+      <span>QRV since 2022</span>
+    </div>
+    <div class="oe8y-tag">&ldquo;Let your enthusiasm cause QRM&rdquo;</div>
+  </div>
+
+  <!-- ███ ABOUT + OPERATING ███ -->
+  <div class="oe8y-g">
+
+    <!-- About -->
+    <div class="oe8y-c">
+      <div class="oe8y-ch">
+        <span class="oe8y-ci ib">&#9786;</span>
+        <span class="oe8y-ct">About</span>
+      </div>
+      <div class="oe8y-about">
+        <img class="oe8y-photo" src="https://oeradio.at/wp-content/uploads/2025/06/oe8yml_Michael_png_orig.jpg" alt="OE8YML">
+        <div class="oe8y-atxt">
+          <p><strong>Michael &ldquo;Michi&rdquo;</strong> from Carinthia, Austria.</p>
+          <p>Operating from the shack, outdoors, hilltops &amp; wherever technically possible. Passionate about open-source projects, digital modes &amp; chasing DX.</p>
+          <div class="oe8y-contact">
+            <div><span>&#9742;</span> HAMSIP: 00633280936153</div>
+            <div><span>&#9993;</span> <a href="mailto:kontakt@oeradio.at">kontakt@oeradio.at</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QRV -->
+    <div class="oe8y-c">
+      <div class="oe8y-ch">
+        <span class="oe8y-ci ia">&#9874;</span>
+        <span class="oe8y-ct">QRV</span>
+      </div>
+      <div class="oe8y-ml">Bands &mdash; 160m to 13cm</div>
+      <div class="oe8y-bg" style="margin-bottom:14px">
+        <span class="oe8y-b bb">160m</span>
+        <span class="oe8y-b bb">80m</span>
+        <span class="oe8y-b bb">40m</span>
+        <span class="oe8y-b bb">30m</span>
+        <span class="oe8y-b bb">20m</span>
+        <span class="oe8y-b bb">17m</span>
+        <span class="oe8y-b bb">15m</span>
+        <span class="oe8y-b bb">12m</span>
+        <span class="oe8y-b bb">10m</span>
+        <span class="oe8y-b bb">6m</span>
+        <span class="oe8y-b bb">2m</span>
+        <span class="oe8y-b bb">70cm</span>
+        <span class="oe8y-b bb">23cm</span>
+        <span class="oe8y-b bb">13cm</span>
+        <span class="oe8y-b bb">QO-100</span>
+      </div>
+      <div class="oe8y-ml">Voice</div>
+      <div class="oe8y-bg" style="margin-bottom:14px">
+        <span class="oe8y-b bv">SSB</span>
+        <span class="oe8y-b bv">FM</span>
+      </div>
+      <div class="oe8y-ml">Digital</div>
+      <div class="oe8y-bg">
+        <span class="oe8y-b bd">FT8</span>
+        <span class="oe8y-b bd">FT4</span>
+        <span class="oe8y-b bd">DMR</span>
+        <span class="oe8y-b bd">C4FM</span>
+        <span class="oe8y-b bd">D-Star</span>
+        <span class="oe8y-b bd">M17</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ███ STATION EQUIPMENT ███ -->
+  <div class="oe8y-g1">
+    <div class="oe8y-c">
+      <div class="oe8y-ch">
+        <span class="oe8y-ci ia">&#9881;</span>
+        <span class="oe8y-ct">Station Equipment</span>
+      </div>
+
+      <div class="oe8y-ml">Transceivers</div>
+      <div class="oe8y-bg" style="margin-bottom:14px">
+        <span class="oe8y-b bb">Yaesu FT-991A</span>
+        <span class="oe8y-b bb">Icom IC-705</span>
+        <span class="oe8y-b bb">Yaesu FT-857D</span>
+        <span class="oe8y-b bb">Yaesu FT-817</span>
+        <span class="oe8y-b bb">Yaesu FTM-200DE</span>
+        <span class="oe8y-b bb">Kenwood TS-700A</span>
+        <span class="oe8y-b bb">Yaesu FT-290R</span>
+        <span class="oe8y-b bb">Anytone AT-D878UV II</span>
+        <span class="oe8y-b bb">QDX</span>
+        <span class="oe8y-b bb">Several Handhelds</span>
+      </div>
+
+      <div class="oe8y-ml">Amplifiers, Tuners &amp; Accessories</div>
+      <div class="oe8y-bg" style="margin-bottom:14px">
+        <span class="oe8y-b bv">ATU-100</span>
+        <span class="oe8y-b bv">Micro PA-100</span>
+        <span class="oe8y-b bv">Micro PA-50</span>
+        <span class="oe8y-b bv">23cm Transverter</span>
+      </div>
+
+      <div class="oe8y-ml">SDR &amp; Satellite</div>
+      <div class="oe8y-bg" style="margin-bottom:14px">
+        <span class="oe8y-b bd">Adalm Pluto</span>
+        <span class="oe8y-b bd">Pluto+</span>
+        <span class="oe8y-b bd">MSI-2500 SDR</span>
+        <span class="oe8y-b bd">QO-100 / Langstone</span>
+      </div>
+
+      <div class="oe8y-ml">Antennas</div>
+      <div class="oe8y-bg" style="margin-bottom:14px">
+        <span class="oe8y-b bb">Multiband Dipol</span>
+        <span class="oe8y-b bb">EFHW</span>
+        <span class="oe8y-b bb">EFRW</span>
+        <span class="oe8y-b bb">JPC-7</span>
+        <span class="oe8y-b bb">PAC-12</span>
+        <span class="oe8y-b bb">Diamond X200</span>
+        <span class="oe8y-b bb">Diamond X5000N</span>
+        <span class="oe8y-b bb">HaloLoop</span>
+        <span class="oe8y-b bb">2m Dipol</span>
+        <span class="oe8y-b bb">Homebrew Antennas</span>
+      </div>
+
+      <div class="oe8y-ml">Test &amp; Measurement</div>
+      <div class="oe8y-bg">
+        <span class="oe8y-b bv">Schlumberger Stabilock 4021</span>
+        <span class="oe8y-b bv">R&amp;S URV4</span>
+        <span class="oe8y-b bv">BG7TBL GNSS Disciplined Oscillator</span>
+        <span class="oe8y-b bv">BG7TBL Frequency Counter</span>
+        <span class="oe8y-b bv">NanoVNA</span>
+        <span class="oe8y-b bv">TinySA</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ███ DIGITAL IDS + HAMALERT ███ -->
+  <div class="oe8y-g">
+
+    <!-- Digital IDs -->
+    <div class="oe8y-c">
+      <div class="oe8y-ch">
+        <span class="oe8y-ci ig">&#9854;</span>
+        <span class="oe8y-ct">Digital IDs</span>
+      </div>
+      <table class="oe8y-dt">
+        <tr><td>DMR ID</td><td><a href="https://brandmeister.network/?page=profile&call=OE8YML" target="_blank">2320377</a></td></tr>
+        <tr><td>D-Star</td><td>OE8YML</td></tr>
+        <tr><td>C4FM</td><td>OE8YML</td></tr>
+        <tr><td>M17</td><td>OE8YML</td></tr>
+        <tr><td>DMR TG</td><td>TG 2328</td></tr>
+        <tr><td>Repeater</td><td>OE8XFK &middot; TG 9</td></tr>
+      </table>
+    </div>
+
+    <!-- HamAlert Spots -->
+    <div class="oe8y-c">
+      <div class="oe8y-ch">
+        <span class="oe8y-ci ir">&#9671;</span>
+        <span class="oe8y-ct">Recent Spots</span>
+      </div>
+      <div class="oe8y-iw">
+        <iframe src="https://hamalert.org/myspot?c=OE8YML&h=954f2dd2dc0d4469&dark=1" height="340" loading="lazy"></iframe>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ███ SOTA ███ -->
+  <div class="oe8y-g1">
+    <div class="oe8y-c">
+      <div class="oe8y-ch">
+        <span class="oe8y-ci ig">&#9650;</span>
+        <span class="oe8y-ct">SOTA &mdash; Summits on the Air</span>
+      </div>
+      <div class="oe8y-iw">
+        <iframe src="https://neon1.net/sota/myact/page?c=OE8YML&l=0&p=1" height="400" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- ███ POTA ███ -->
+  <div class="oe8y-g1">
+    <div class="oe8y-c">
+      <div class="oe8y-ch">
+        <span class="oe8y-ci ig">&#9752;</span>
+        <span class="oe8y-ct">POTA &mdash; Parks on the Air</span>
+      </div>
+      <div class="oe8y-iw">
+        <iframe src="https://pota-stats.wd4dan.net/?call=OE8YML" height="400" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- ███ RECENT QSOs ███ -->
+  <div class="oe8y-g1">
+    <div class="oe8y-c">
+      <div class="oe8y-ch">
+        <span class="oe8y-ci ib">&#9898;</span>
+        <span class="oe8y-ct">Recent QSOs &mdash; ClubLog</span>
+      </div>
+      <div class="oe8y-iw">
+        <iframe src="https://clublog.org/last10_iframe.php?call=oe8yml" height="320" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- ███ PROPAGATION + WEBRX ███ -->
+  <div class="oe8y-g">
+    <div class="oe8y-c">
+      <div class="oe8y-ch">
+        <span class="oe8y-ci ia">&#9788;</span>
+        <span class="oe8y-ct">Propagation</span>
+      </div>
+      <div class="oe8y-solar">
+        <img src="https://www.hamqsl.com/solar101vhfpic.php" alt="Solar-Terrestrial Data" loading="lazy">
+      </div>
+    </div>
+    <div class="oe8y-c">
+      <div class="oe8y-ch">
+        <span class="oe8y-ci ir">&#9655;</span>
+        <span class="oe8y-ct">Listen Live</span>
+      </div>
+      <p style="color:#c9d1d9;font-size:.88rem;margin-bottom:16px">
+        Tune in to multiple bands in real-time via the WebRX.AT online receiver.
+      </p>
+      <div style="text-align:center;margin:20px 0">
+        <a class="oe8y-rxbtn" href="https://webrx.at" target="_blank">&#9655; WebRX.AT</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ███ MORSE SEPARATOR ███ -->
+  <div class="oe8y-ms" style="margin:8px 0 20px">&middot; &mdash; &middot; &mdash; &middot;</div>
+
+  <!-- ███ OERADIO ███ -->
+  <div class="oe8y-feat">
+    <div class="oe8y-fn">OERADIO.AT</div>
+    <div class="oe8y-fs">All Calls Welcome.</div>
+    <div class="oe8y-fsub">Gemeinsam funken. Lernen. Entdecken.</div>
+    <a class="oe8y-fbtn" href="https://oeradio.at" target="_blank">&#9655; oeradio.at</a>
+    <div class="oe8y-flinks">
+      <a href="https://oeradio.at/oe8yml/" target="_blank">OE8YML Profile &#8599;</a>
+      <a href="https://oeradio.at" target="_blank">Digital QSL Generator &#8599;</a>
+    </div>
+  </div>
+
+  <!-- ███ NEXT GENERATION ███ -->
+  <div class="oe8y-g1">
+    <div class="oe8y-c">
+      <div class="oe8y-ch">
+        <span class="oe8y-ci ia">&#9889;</span>
+        <span class="oe8y-ct">Next Generation</span>
+      </div>
+      <p style="color:#c9d1d9;font-size:.88rem;margin-bottom:12px">
+        Active with <a href="https://www.qrz.com/db/OE8JOTA" target="_blank"><strong>OE8JOTA</strong></a> and the <strong>Jambuleers on the Air</strong> every October &mdash; bringing scouting and amateur radio together, inspiring young operators to get on the air.
+      </p>
+      <div class="oe8y-bg">
+        <span class="oe8y-b bb">OE8JOTA</span>
+        <span class="oe8y-b bb">JOTA</span>
+        <span class="oe8y-b bd">Jambuleers on the Air</span>
+        <span class="oe8y-b bd">Scouting &amp; Ham Radio</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ███ CLUBS & MEMBERSHIPS ███ -->
+  <div class="oe8y-g1">
+    <div class="oe8y-c">
+      <div class="oe8y-ch">
+        <span class="oe8y-ci ia">&#9733;</span>
+        <span class="oe8y-ct">Clubs &amp; Memberships</span>
+      </div>
+      <div class="oe8y-lg">
+        <a class="oe8y-li" href="https://www.s59veg.si/" target="_blank" title="Radioklub Vegova &ndash; S59VEG">
+          <img src="https://cdn-bio.qrz.com/l/oe8yml/icon.png" alt="S59VEG">
+        </a>
+        <a class="oe8y-li" href="#" target="_blank" title="AFC Spittal">
+          <img src="https://cdn-bio.qrz.com/l/oe8yml/AFU_Spittal_Logo_final.png" alt="AFC Spittal">
+        </a>
+        <a class="oe8y-li" href="#" target="_blank" title="K&auml;rnten Funkt">
+          <img src="https://cdn-bio.qrz.com/l/oe8yml/kaerntenfunkt.png" alt="K&auml;rnten Funkt" style="max-height:52px;max-width:none;width:auto">
+        </a>
+        <a class="oe8y-li" href="#" target="_blank" title="&Ouml;VSV">
+          <img src="https://cdn-bio.qrz.com/l/oe8yml/oevsv.png?p=9be8ec8a2242359dcc8fac64193a722d" alt="&Ouml;VSV">
+        </a>
+        <a class="oe8y-li" href="#" target="_blank" title="FIRAC">
+          <img src="https://cdn-bio.qrz.com/l/oe8yml/firac.png" alt="FIRAC" style="background:#fff;border-radius:8px;padding:4px">
+        </a>
+        <a class="oe8y-li" href="#" target="_blank" title="BOS ARSA">
+          <img src="https://cdn-bio.qrz.com/l/oe8yml/bosarsa.jpeg?p=9be8ec8a2242359dcc8fac64193a722d" alt="BOS ARSA">
+        </a>
+        <a class="oe8y-li" href="https://www.sota.org.uk/" target="_blank" title="SOTA">
+          <img src="https://cdn-bio.qrz.com/l/oe8yml/900px_SOTA_Logo_svg.png" alt="SOTA">
+        </a>
+        <a class="oe8y-li" href="https://pota.app/" target="_blank" title="POTA">
+          <img src="https://cdn-bio.qrz.com/l/oe8yml/300px_pota_logo.png" alt="POTA">
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ███ QSL INFO ███ -->
+  <div class="oe8y-g1">
+    <div class="oe8y-c">
+      <div class="oe8y-ch">
+        <span class="oe8y-ci ig">&#10003;</span>
+        <span class="oe8y-ct">QSL &amp; Logging</span>
+      </div>
+      <div class="oe8y-qg">
+        <span class="oe8y-qb qa">&#10003; QRZ.com &mdash; auto</span>
+        <span class="oe8y-qb qa">&#10003; HRDLogbook &mdash; auto</span>
+        <span class="oe8y-qb qa">&#10003; ClubLog &mdash; auto</span>
+        <span class="oe8y-qb qm">&#9675; LoTW &mdash; weekly</span>
+      </div>
+      <p style="color:#8b949e;font-size:.82rem;margin-top:12px">
+        Digital QSL via <a href="https://oeradio.at" target="_blank">oeradio.at</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- ███ FOOTER ███ -->
+  <div class="oe8y-ft">
+    <p style="color:#8b949e;font-size:.9rem;margin-bottom:16px">Hope to hear you on the bands or see you on the waterfall soon.</p>
+    <div class="oe8y-ms">&mdash; &middot; &mdash;</div>
+    <div class="oe8y-73">73</div>
+    <div class="oe8y-de">de OE8YML</div>
+    <div class="oe8y-ms" style="margin-top:8px">&middot; &mdash; &middot; &mdash; &middot;</div>
+  </div>
+
+</div>
