@@ -1,0 +1,229 @@
+<style>
+/* === OE8YYY QRZ Bio — Alpine Light === */
+@keyframes summit-glow{
+  0%,100%{opacity:.7}50%{opacity:1}
+}
+
+.yyy *{box-sizing:border-box;margin:0;padding:0}
+.yyy{
+  font-family:Georgia,'Times New Roman',serif;
+  background:#faf8f5;color:#2d3436;max-width:920px;margin:0 auto;
+  padding:0;border-radius:16px;line-height:1.7;overflow:hidden;
+  box-shadow:0 2px 30px rgba(0,0,0,.08);
+}
+.yyy a{color:#b5446e;text-decoration:none}
+.yyy a:hover{color:#8c3358;text-decoration:underline}
+
+/* --- Hero --- */
+.yyy-hero{
+  background:linear-gradient(160deg,#2d3436 0%,#5c4455 35%,#8b6278 65%,#c9a0ab 100%);
+  padding:50px 30px 40px;text-align:center;position:relative;
+}
+.yyy-hero::after{
+  content:'';position:absolute;bottom:-1px;left:0;right:0;height:40px;
+  background:linear-gradient(to top,#faf8f5,transparent);
+}
+.yyy-call{
+  font-family:'Courier New',monospace;font-size:3.8rem;font-weight:900;
+  letter-spacing:12px;color:#fff;margin:0 0 6px;
+  text-shadow:0 2px 20px rgba(0,0,0,.3);
+}
+.yyy-sub{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  font-size:.9rem;color:rgba(255,255,255,.7);letter-spacing:3px;
+  text-transform:uppercase;
+}
+.yyy-loc{
+  margin-top:14px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  font-size:.8rem;color:rgba(255,255,255,.6);
+}
+.yyy-goat{
+  display:inline-block;margin-top:20px;
+  background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.3);
+  border-radius:30px;padding:8px 24px;
+  font-family:'Courier New',monospace;font-size:.75rem;
+  font-weight:700;letter-spacing:3px;color:#fff;
+  text-transform:uppercase;
+  animation:summit-glow 3s ease-in-out infinite;
+}
+
+/* --- Content wrapper --- */
+.yyy-body{padding:30px 28px 10px}
+
+/* --- Sections --- */
+.yyy-sec{margin-bottom:32px}
+.yyy-sh{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  font-size:.7rem;font-weight:700;letter-spacing:3px;
+  text-transform:uppercase;color:#b5446e;margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;
+}
+.yyy-sh::after{
+  content:'';flex:1;height:1px;background:linear-gradient(90deg,#e0d5cc,transparent);
+}
+
+/* --- About --- */
+.yyy-about{display:flex;gap:24px;align-items:flex-start}
+.yyy-photo{
+  width:130px;height:170px;border-radius:14px;object-fit:cover;
+  box-shadow:0 4px 20px rgba(0,0,0,.1);flex-shrink:0;
+}
+.yyy-atxt{flex:1}
+.yyy-atxt p{margin-bottom:10px;font-size:.95rem;color:#4a4a4a}
+.yyy-atxt strong{color:#2d3436}
+
+/* --- Tags --- */
+.yyy-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.yyy-tag{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  display:inline-block;padding:5px 14px;border-radius:20px;
+  font-size:.75rem;font-weight:600;letter-spacing:.5px;
+}
+.tp{background:#f8e8ee;color:#b5446e}
+.tg{background:#e8f5e9;color:#3a7d44}
+
+/* --- Divider --- */
+.yyy-div{
+  text-align:center;margin:28px 0;color:#d4c5bb;
+  font-family:'Courier New',monospace;letter-spacing:8px;font-size:.9rem;
+}
+
+/* --- Iframe wrapper --- */
+.yyy-iw{
+  border-radius:12px;overflow:hidden;
+  box-shadow:0 2px 16px rgba(0,0,0,.06);
+  border:1px solid #e8e2db;background:#fff;
+}
+.yyy-iw iframe{width:100%;border:none;display:block}
+
+/* --- Photo gallery --- */
+.yyy-gal{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.yyy-gal img{
+  width:100%;height:240px;object-fit:cover;border-radius:12px;
+  box-shadow:0 3px 15px rgba(0,0,0,.08);transition:transform .3s;
+}
+.yyy-gal img:hover{transform:scale(1.02)}
+
+/* --- Info card --- */
+.yyy-card{
+  background:#fff;border:1px solid #e8e2db;border-radius:14px;
+  padding:22px 26px;box-shadow:0 2px 12px rgba(0,0,0,.04);
+  transition:box-shadow .3s;
+}
+.yyy-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.08)}
+
+/* --- Footer --- */
+.yyy-ft{
+  text-align:center;padding:20px 20px 30px;
+  background:linear-gradient(to bottom,#faf8f5,#f0ebe4);
+  border-top:1px solid #e8e2db;
+}
+.yyy-ft-msg{
+  font-style:italic;color:#8a7e74;font-size:.95rem;margin-bottom:14px;
+}
+.yyy-ft-73{
+  font-family:'Courier New',monospace;font-size:2.8rem;font-weight:900;
+  color:#b5446e;opacity:.7;line-height:1;
+}
+.yyy-ft-de{
+  font-family:'Courier New',monospace;color:#a89e94;
+  font-size:.82rem;letter-spacing:3px;margin-top:4px;
+}
+
+/* --- Responsive --- */
+@media(max-width:700px){
+  .yyy-call{font-size:2.4rem;letter-spacing:5px}
+  .yyy-about{flex-direction:column;align-items:center;text-align:center}
+  .yyy-photo{width:110px;height:140px}
+  .yyy-gal{grid-template-columns:1fr}
+  .yyy-body{padding:20px 16px 10px}
+}
+</style>
+
+<div class="yyy">
+
+  <!-- ███ HERO ███ -->
+  <div class="yyy-hero">
+    <div class="yyy-call">OE8YYY</div>
+    <div class="yyy-sub">Oscar Echo Eight Yankee Yankee Yankee</div>
+    <div class="yyy-loc">
+      <span>JN66 &middot; Carinthia, Austria</span>
+    </div>
+    <div class="yyy-goat">&#9650; SOTA Active &#9650;</div>
+  </div>
+
+  <div class="yyy-body">
+
+    <!-- ███ ABOUT ███ -->
+    <div class="yyy-sec">
+      <div class="yyy-sh">About</div>
+      <div class="yyy-about">
+        <img class="yyy-photo" src="https://cdn-bio.qrz.com/y/oe8yyy/IMG_7643_png.jpg" alt="OE8YYY">
+        <div class="yyy-atxt">
+          <p><strong>Christina</strong> from Carinthia, Austria.</p>
+          <p>Passionate SOTA activator &amp; certified SOTA Active. From alpine summits across Austria to the roof of Africa &mdash; Kibo, 5895m. Where there&rsquo;s a peak, there&rsquo;s a way.</p>
+          <div class="yyy-tags">
+            <span class="yyy-tag tp">SOTA</span>
+            <span class="yyy-tag tp">SOTA Active</span>
+            <span class="yyy-tag tp">Kibo 5895m</span>
+            <span class="yyy-tag tg">WWAYL</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ███ WWAYL ███ -->
+    <div class="yyy-sec">
+      <div class="yyy-sh">WWAYL &mdash; Young Ladies World Wide Award</div>
+      <div class="yyy-iw">
+        <iframe src="https://hamaward.cloud/wwayl" height="700" loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <!-- ███ SOTA ███ -->
+    <div class="yyy-sec">
+      <div class="yyy-sh">SOTA &mdash; Summits on the Air</div>
+      <div class="yyy-iw">
+        <iframe src="https://neon1.net/sota/myact/page?c=OE8YYY&l=0&p=1" height="400" loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <!-- ███ PHOTOS ███ -->
+    <div class="yyy-sec">
+      <div class="yyy-sh">On the Summits</div>
+      <div class="yyy-gal">
+        <img src="https://cdn-bio.qrz.com/y/oe8yyy/IMG_2548_jpeg_600x450.jpg" alt="SOTA Activation" loading="lazy">
+        <img src="https://cdn-bio.qrz.com/y/oe8yyy/IMG_2477_jpeg.jpg" alt="Summit Adventure" loading="lazy">
+      </div>
+    </div>
+
+    <div class="yyy-div">&#9650; &middot; &#9650; &middot; &#9650;</div>
+
+    <!-- ███ NEXT GENERATION ███ -->
+    <div class="yyy-sec">
+      <div class="yyy-sh">Next Generation</div>
+      <div class="yyy-card">
+        <p style="font-size:.92rem;color:#4a4a4a;margin-bottom:12px">
+          Active with <a href="https://www.qrz.com/db/OE8JOTA" target="_blank"><strong>OE8JOTA</strong></a> and the <strong>Jambuleers on the Air</strong> every October &mdash; bringing scouting and amateur radio together.
+        </p>
+        <div class="yyy-tags">
+          <span class="yyy-tag tp">OE8JOTA</span>
+          <span class="yyy-tag tp">JOTA</span>
+          <span class="yyy-tag tg">Jambuleers on the Air</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ███ FOOTER ███ -->
+  <div class="yyy-ft">
+    <div class="yyy-ft-msg">See you from the next summit.</div>
+    <div class="yyy-div" style="margin:10px 0">&#9650; &mdash; &#9650;</div>
+    <div class="yyy-ft-73">73</div>
+    <div class="yyy-ft-de">de OE8YYY</div>
+  </div>
+
+</div>
