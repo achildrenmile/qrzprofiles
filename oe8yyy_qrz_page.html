@@ -67,7 +67,7 @@
 /* --- About --- */
 .yyy-about{display:flex;gap:24px;align-items:flex-start}
 .yyy-photo{
-  width:130px;height:170px;border-radius:14px;object-fit:cover;
+  width:130px;height:auto;border-radius:14px;
   box-shadow:0 4px 20px rgba(0,0,0,.1);flex-shrink:0;
 }
 .yyy-atxt{flex:1}
@@ -136,7 +136,7 @@
 @media(max-width:700px){
   .yyy-call{font-size:2.4rem;letter-spacing:5px}
   .yyy-about{flex-direction:column;align-items:center;text-align:center}
-  .yyy-photo{width:110px;height:140px}
+  .yyy-photo{width:110px;height:auto}
   .yyy-gal{grid-template-columns:1fr}
   .yyy-body{padding:20px 16px 10px}
 }
@@ -155,6 +155,11 @@
   </div>
 
   <div class="yyy-body">
+
+    <!-- ███ WELCOME ███ -->
+    <p style="text-align:center;font-size:1rem;color:#6a5a5a;margin-bottom:28px;font-style:italic">
+      Welcome to my QRZ page &mdash; glad you stopped by. Hope to catch you on a summit or on the air!
+    </p>
 
     <!-- ███ ABOUT ███ -->
     <div class="yyy-sec">
@@ -196,6 +201,16 @@
       <div class="yyy-gal">
         <img src="https://cdn-bio.qrz.com/y/oe8yyy/IMG_2548_jpeg_600x450.jpg" alt="SOTA Activation" loading="lazy">
         <img src="https://cdn-bio.qrz.com/y/oe8yyy/IMG_2477_jpeg.jpg" alt="Summit Adventure" loading="lazy">
+      </div>
+    </div>
+
+    <!-- ███ OERADIO ███ -->
+    <div class="yyy-sec">
+      <div class="yyy-sh">OERadio.at</div>
+      <div class="yyy-card" style="text-align:center;padding:26px">
+        <div style="font-size:1.1rem;font-weight:700;color:#b5446e;margin-bottom:4px">All Calls Welcome.</div>
+        <p style="color:#8a7e74;font-size:.85rem;font-style:italic;margin-bottom:16px">Gemeinsam funken. Lernen. Entdecken.</p>
+        <a href="https://oeradio.at" target="_blank" style="display:inline-block;padding:10px 26px;background:linear-gradient(135deg,#b5446e,#8c3358);color:#fff;border-radius:8px;font-weight:700;font-size:.85rem;letter-spacing:1px;text-decoration:none">&#9655; oeradio.at</a>
       </div>
     </div>
 
