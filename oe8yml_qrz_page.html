@@ -1,256 +1,279 @@
 <style>
-/* === OE8YML QRZ Bio === */
-@keyframes onair{0%,100%{box-shadow:0 0 4px #e22,0 0 8px #e22}50%{box-shadow:0 0 8px #e22,0 0 20px #e22,0 0 40px rgba(255,34,34,.3)}}
-@keyframes glow{0%,100%{text-shadow:0 0 10px rgba(230,168,23,.4)}50%{text-shadow:0 0 25px rgba(230,168,23,.7),0 0 50px rgba(230,168,23,.2)}}
+/* === OE8YML QRZ Bio - OERadio Design System === */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@keyframes onair{0%,100%{box-shadow:0 0 4px #ef4444,0 0 8px #ef4444}50%{box-shadow:0 0 8px #ef4444,0 0 20px #ef4444,0 0 40px rgba(239,68,68,.3)}}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.9}}
 
 .oe8y *{box-sizing:border-box;margin:0;padding:0}
 .oe8y{
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
-  background:#0d1117;color:#e6edf3;max-width:920px;margin:0 auto;
-  padding:20px;border-radius:14px;line-height:1.6;
-  box-shadow:0 4px 40px rgba(0,0,0,.4);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+  background:#0f172a;color:#f1f5f9;max-width:920px;margin:0 auto;
+  padding:min(1.5rem,2vw);line-height:1.55;
+  font-size:1.05rem;font-weight:400;
 }
-.oe8y a{color:#58a6ff;text-decoration:none}
-.oe8y a:hover{text-decoration:underline}
-.oe8y a.oe8y-rxbtn,.oe8y a.oe8y-fbtn{color:#0d1117}
-.oe8y a.oe8y-rxbtn:hover,.oe8y a.oe8y-fbtn:hover{color:#0d1117;text-decoration:none}
+.oe8y a{color:#3b82f6;text-decoration:none;transition:color .2s}
+.oe8y a:hover{color:#60a5fa}
+.oe8y a.oe8y-btn{color:#ffffff}
+.oe8y a.oe8y-btn:hover{color:#ffffff;text-decoration:none}
 
 /* --- Hero --- */
 .oe8y-hero{
-  background:
-    linear-gradient(rgba(230,168,23,.03) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(230,168,23,.03) 1px,transparent 1px),
-    linear-gradient(135deg,#0d1117 0%,#141c28 50%,#1a1f2e 100%);
-  background-size:24px 24px,24px 24px,100% 100%;
-  border:1px solid #30363d;border-radius:12px;
-  padding:40px 24px;text-align:center;margin-bottom:16px;
+  background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);
+  border:1px solid #334155;border-radius:12px;
+  padding:min(3rem,5vw) min(1.5rem,3vw);text-align:center;margin-bottom:2rem;
   position:relative;overflow:hidden;
+  box-shadow:0 4px 6px -1px rgba(0,0,0,0.4);
 }
 .oe8y-hero::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,transparent,#e6a817 20%,#ff4444 50%,#e6a817 80%,transparent);
-}
-.oe8y-hero::after{
-  content:'';position:absolute;bottom:0;left:15%;right:15%;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(230,168,23,.4),transparent);
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,#3b82f6 50%,transparent);
 }
 .oe8y-onair{
   display:inline-flex;align-items:center;gap:8px;
-  background:rgba(255,34,34,.08);border:1px solid rgba(255,34,34,.25);
-  border-radius:20px;padding:5px 18px;margin-bottom:24px;
-  font-size:.7rem;letter-spacing:3px;color:#ff4444;
-  font-family:'Courier New',monospace;
+  background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);
+  border-radius:99px;padding:6px 20px;margin-bottom:1.5rem;
+  font-size:.7rem;letter-spacing:2px;color:#ef4444;font-weight:600;
+  text-transform:uppercase;
 }
 .oe8y-onair i{
-  width:8px;height:8px;border-radius:50%;background:#e22;
+  width:8px;height:8px;border-radius:50%;background:#ef4444;
   display:inline-block;animation:onair 2s ease-in-out infinite;
 }
 .oe8y-call{
   font-family:'Courier New','Lucida Console',monospace;
-  font-size:4.2rem;font-weight:900;letter-spacing:10px;
-  color:#e6a817;animation:glow 3s ease-in-out infinite;margin:8px 0;
+  font-size:clamp(2.5rem,8vw,4.5rem);font-weight:900;letter-spacing:clamp(4px,1vw,12px);
+  color:#3b82f6;margin:1rem 0;line-height:1.1;
 }
-.oe8y-phon{font-size:.95rem;color:#8b949e;letter-spacing:2px;margin-bottom:12px}
+.oe8y-phon{font-size:.95rem;color:#94a3b8;letter-spacing:1px;margin-bottom:1rem;font-weight:500}
 .oe8y-ms{
-  font-family:'Courier New',monospace;color:#e6a817;
-  letter-spacing:8px;font-size:1.1rem;margin:16px 0;opacity:.5;
+  font-family:'Courier New',monospace;color:#64748b;
+  letter-spacing:6px;font-size:1rem;margin:1.2rem 0;opacity:.6;
 }
 .oe8y-hinf{
-  display:flex;justify-content:center;gap:8px 24px;flex-wrap:wrap;
-  font-size:.85rem;color:#8b949e;
+  display:flex;justify-content:center;gap:8px 20px;flex-wrap:wrap;
+  font-size:.85rem;color:#cbd5e1;
 }
 .oe8y-hinf span{
-  background:rgba(255,255,255,.04);padding:3px 12px;border-radius:6px;
-  border:1px solid rgba(255,255,255,.06);
+  background:#1e293b;padding:6px 14px;border-radius:8px;
+  border:1px solid #334155;font-weight:500;
 }
-.oe8y-tag{font-style:italic;color:#6e7681;margin-top:16px;font-size:.88rem}
+.oe8y-tag{font-style:italic;color:#64748b;margin-top:1.2rem;font-size:.9rem}
 
 /* --- Grid --- */
-.oe8y-g{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-.oe8y-g1{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:16px}
+.oe8y-g{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2rem}
+.oe8y-g1{display:grid;grid-template-columns:1fr;gap:2rem;margin-bottom:2rem}
 
 /* --- Cards --- */
 .oe8y-c{
-  background:#161b22;border:1px solid #30363d;border-radius:12px;
-  padding:22px;transition:border-color .3s;
+  background:#1e293b;border:1px solid #334155;border-radius:12px;
+  padding:1.5rem;transition:all .3s ease;
+  box-shadow:0 1px 3px rgba(0,0,0,0.12),0 1px 2px rgba(0,0,0,0.08);
 }
-.oe8y-c:hover{border-color:#e6a817}
+.oe8y-c:hover{
+  border-color:#3b82f6;
+  transform:translateY(-4px);
+  box-shadow:0 12px 24px -8px rgba(0,0,0,0.3);
+}
 .oe8y-ch{
-  display:flex;align-items:center;gap:10px;margin-bottom:14px;
-  padding-bottom:10px;border-bottom:1px solid #21262d;
+  display:flex;align-items:center;gap:10px;margin-bottom:1.2rem;
+  padding-bottom:12px;border-bottom:1px solid #334155;
 }
 .oe8y-ci{
-  width:30px;height:30px;border-radius:8px;display:inline-flex;
-  align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;
+  width:32px;height:32px;border-radius:8px;display:inline-flex;
+  align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;
 }
 .oe8y-ct{
-  font-size:.85rem;font-weight:700;letter-spacing:1.5px;
-  text-transform:uppercase;color:#e6edf3;
+  font-size:.9rem;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;color:#f1f5f9;
 }
-.ia{background:rgba(230,168,23,.15);color:#e6a817}
-.ig{background:rgba(63,185,80,.15);color:#3fb950}
-.ib{background:rgba(88,166,255,.15);color:#58a6ff}
-.ir{background:rgba(255,68,68,.15);color:#ff4444}
+.ia{background:rgba(59,130,246,.15);color:#3b82f6}
+.ig{background:rgba(34,197,94,.15);color:#22c55e}
+.ib{background:rgba(14,165,233,.15);color:#0ea5e9}
+.ir{background:rgba(239,68,68,.15);color:#ef4444}
 
 /* --- About --- */
-.oe8y-about{display:flex;gap:20px;align-items:flex-start}
+.oe8y-about{display:flex;gap:1.5rem;align-items:flex-start}
 .oe8y-photo{
   width:110px;height:110px;border-radius:12px;object-fit:cover;
-  border:2px solid #30363d;flex-shrink:0;
+  border:2px solid #334155;flex-shrink:0;
+  box-shadow:0 4px 6px -1px rgba(0,0,0,0.2);
 }
 .oe8y-atxt{flex:1}
-.oe8y-atxt p{margin-bottom:8px;color:#c9d1d9;font-size:.88rem}
+.oe8y-atxt p{margin-bottom:10px;color:#e2e8f0;font-size:.9rem;line-height:1.6}
 .oe8y-contact{
-  margin-top:12px;padding-top:12px;border-top:1px solid #21262d;
+  margin-top:1rem;padding-top:1rem;border-top:1px solid #334155;
 }
 .oe8y-contact div{
-  display:flex;align-items:center;gap:8px;padding:4px 0;
-  color:#8b949e;font-size:.85rem;
+  display:flex;align-items:center;gap:10px;padding:6px 0;
+  color:#94a3b8;font-size:.85rem;
 }
 .oe8y-contact div span:first-child{
   width:22px;text-align:center;flex-shrink:0;
 }
 
 /* --- Badges --- */
-.oe8y-bg{display:flex;flex-wrap:wrap;gap:6px}
+.oe8y-bg{display:flex;flex-wrap:wrap;gap:8px}
 .oe8y-b{
-  display:inline-block;padding:4px 10px;border-radius:6px;
+  display:inline-block;padding:6px 12px;border-radius:8px;
   font-family:'Courier New',monospace;font-size:.78rem;
   font-weight:600;letter-spacing:.5px;
+  transition:all .2s;
 }
-.bb{background:rgba(230,168,23,.12);color:#e6a817;border:1px solid rgba(230,168,23,.25)}
-.bv{background:rgba(88,166,255,.12);color:#58a6ff;border:1px solid rgba(88,166,255,.25)}
-.bd{background:rgba(63,185,80,.12);color:#3fb950;border:1px solid rgba(63,185,80,.25)}
-.bn{background:rgba(255,68,68,.15);color:#ff6b6b;border:1px solid rgba(255,68,68,.35);position:relative}
-.bn::after{content:'NEW';position:absolute;top:-8px;right:-6px;font-size:.45rem;letter-spacing:1px;background:#ff4444;color:#fff;padding:1px 4px;border-radius:4px;font-weight:700}
+.oe8y-b:hover{transform:translateY(-1px)}
+.bb{background:rgba(59,130,246,.12);color:#60a5fa;border:1px solid rgba(59,130,246,.25)}
+.bv{background:rgba(14,165,233,.12);color:#38bdf8;border:1px solid rgba(14,165,233,.25)}
+.bd{background:rgba(34,197,94,.12);color:#4ade80;border:1px solid rgba(34,197,94,.25)}
+.bn{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.35);position:relative}
+.bn::after{content:'NEW';position:absolute;top:-8px;right:-6px;font-size:.45rem;letter-spacing:1px;background:#ef4444;color:#fff;padding:2px 5px;border-radius:4px;font-weight:700}
 .oe8y-ml{
-  font-size:.7rem;text-transform:uppercase;letter-spacing:1.5px;
-  color:#6e7681;margin-bottom:8px;font-weight:600;
+  font-size:.75rem;text-transform:uppercase;letter-spacing:1.2px;
+  color:#64748b;margin-bottom:10px;font-weight:600;
 }
 
 /* --- Iframe --- */
 .oe8y-iw{
-  border-radius:8px;overflow:hidden;border:1px solid #30363d;
-  background:#0d1117;
+  border-radius:8px;overflow:hidden;border:1px solid #334155;
+  background:#ffffff;
+  box-shadow:0 2px 4px rgba(0,0,0,0.1);
+  padding:2px;
 }
-.oe8y-iw iframe{width:100%;border:none;display:block}
+.oe8y-iw iframe{width:100%;border:none;display:block;background:#ffffff}
 
 /* --- Logos --- */
 .oe8y-lg{
   display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));
-  gap:12px;align-items:center;justify-items:center;
+  gap:1rem;align-items:center;justify-items:center;
 }
 .oe8y-li{
-  background:rgba(255,255,255,.04);border-radius:12px;padding:10px;
+  background:#0f172a;border-radius:12px;padding:12px;
   display:flex;align-items:center;justify-content:center;
-  height:74px;width:100%;transition:background .3s;
-  border:1px solid transparent;
+  height:74px;width:100%;transition:all .3s;
+  border:1px solid #334155;
 }
-.oe8y-li:hover{background:rgba(255,255,255,.08);border-color:#30363d}
+.oe8y-li:hover{
+  background:#1e293b;border-color:#3b82f6;
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,0,0,0.2);
+}
 .oe8y-li img{max-height:52px;max-width:100%;object-fit:contain}
 
 /* --- QSL --- */
 .oe8y-qg{display:flex;flex-wrap:wrap;gap:10px}
 .oe8y-qb{
-  display:inline-flex;align-items:center;gap:6px;padding:6px 14px;
-  border-radius:8px;font-size:.82rem;font-weight:500;
+  display:inline-flex;align-items:center;gap:6px;padding:8px 16px;
+  border-radius:8px;font-size:.82rem;font-weight:600;
+  transition:all .2s;
 }
-.qa{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.2);color:#3fb950}
-.qm{background:rgba(230,168,23,.1);border:1px solid rgba(230,168,23,.2);color:#e6a817}
+.oe8y-qb:hover{transform:translateY(-1px)}
+.qa{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);color:#4ade80}
+.qm{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.25);color:#60a5fa}
 
-/* --- WebRX Button --- */
-.oe8y-rxbtn{
-  display:inline-block;padding:12px 28px;
-  background:linear-gradient(135deg,#e6a817,#d4960f);
-  color:#0d1117;text-decoration:none !important;border-radius:8px;
-  font-weight:700;font-size:.88rem;letter-spacing:1px;
-  transition:transform .2s,box-shadow .2s;
-  font-family:'Courier New',monospace;
+/* --- Buttons --- */
+.oe8y-btn{
+  display:inline-block;padding:12px 32px;
+  background:#3b82f6;color:#ffffff;
+  text-decoration:none !important;border-radius:8px;
+  font-weight:700;font-size:.9rem;letter-spacing:.5px;
+  transition:all .2s;
+  box-shadow:0 4px 6px -1px rgba(59,130,246,0.3);
 }
-.oe8y-rxbtn:hover{
+.oe8y-btn:hover{
+  background:#2563eb;
   transform:translateY(-2px);
-  box-shadow:0 4px 20px rgba(230,168,23,.4);
-  color:#0d1117;text-decoration:none !important;
+  box-shadow:0 8px 16px -4px rgba(59,130,246,0.4);
+  color:#ffffff !important;
 }
 
 /* --- Solar widget image --- */
 .oe8y-solar{text-align:center}
-.oe8y-solar img{max-width:100%;border-radius:6px}
+.oe8y-solar img{
+  max-width:100%;border-radius:8px;
+  border:1px solid #334155;
+  box-shadow:0 4px 6px -1px rgba(0,0,0,0.2);
+}
 
 /* --- Footer --- */
-.oe8y-ft{text-align:center;padding:28px 20px 10px}
+.oe8y-ft{text-align:center;padding:3rem 1.5rem 1rem}
 .oe8y-73{
-  font-family:'Courier New',monospace;font-size:3rem;font-weight:900;
-  color:#e6a817;opacity:.8;line-height:1;
+  font-family:'Courier New',monospace;font-size:clamp(2rem,6vw,3rem);font-weight:900;
+  color:#3b82f6;opacity:.9;line-height:1;
+  animation:pulse 3s ease-in-out infinite;
 }
 .oe8y-de{
-  font-family:'Courier New',monospace;color:#6e7681;
-  font-size:.85rem;letter-spacing:3px;margin-top:4px;
+  font-family:'Courier New',monospace;color:#64748b;
+  font-size:.85rem;letter-spacing:3px;margin-top:8px;
 }
 
 /* --- Digital ID table --- */
 .oe8y-dt{width:100%;border-collapse:collapse}
-.oe8y-dt td{padding:6px 10px;font-size:.85rem;border-bottom:1px solid #21262d}
-.oe8y-dt td:first-child{color:#8b949e;white-space:nowrap;width:100px}
-.oe8y-dt td:last-child{color:#e6edf3;font-family:'Courier New',monospace}
+.oe8y-dt td{padding:10px 12px;font-size:.85rem;border-bottom:1px solid #334155}
+.oe8y-dt tr:last-child td{border-bottom:none}
+.oe8y-dt td:first-child{color:#94a3b8;white-space:nowrap;width:100px;font-weight:500}
+.oe8y-dt td:last-child{color:#f1f5f9;font-family:'Courier New',monospace;font-weight:600}
 
 /* --- Featured / OERadio --- */
 .oe8y-feat{
-  background:
-    linear-gradient(rgba(230,168,23,.02) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(230,168,23,.02) 1px,transparent 1px),
-    linear-gradient(135deg,#161b22 0%,#1a1f2e 100%);
-  background-size:24px 24px,24px 24px,100% 100%;
-  border:1px solid rgba(230,168,23,.4);border-radius:12px;
-  padding:34px 30px;text-align:center;margin-bottom:16px;
+  background:linear-gradient(135deg,#3b82f6 0%,#2563eb 100%);
+  border:1px solid #60a5fa;border-radius:12px;
+  padding:min(2.5rem,4vw) min(2rem,3vw);text-align:center;margin-bottom:2rem;
   position:relative;overflow:hidden;
-  transition:border-color .3s;
+  transition:all .3s;
+  box-shadow:0 4px 6px -1px rgba(59,130,246,0.3);
 }
-.oe8y-feat:hover{border-color:#e6a817}
+.oe8y-feat:hover{
+  border-color:#93c5fd;
+  transform:translateY(-4px);
+  box-shadow:0 12px 24px -8px rgba(59,130,246,0.4);
+}
 .oe8y-feat::before{
   content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,transparent,#e6a817,transparent);
-}
-.oe8y-feat::after{
-  content:'';position:absolute;bottom:0;left:20%;right:20%;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(230,168,23,.25),transparent);
+  background:linear-gradient(90deg,transparent,#ffffff 50%,transparent);
+  opacity:.5;
 }
 .oe8y-fn{
-  font-family:'Courier New',monospace;font-size:2rem;font-weight:900;
-  color:#e6a817;letter-spacing:4px;margin-bottom:8px;
+  font-family:'Inter',sans-serif;font-size:clamp(1.5rem,5vw,2.2rem);font-weight:800;
+  color:#ffffff;letter-spacing:2px;margin-bottom:10px;
 }
 .oe8y-fs{
-  font-size:1.15rem;color:#e6edf3;margin-bottom:4px;font-weight:500;
-  letter-spacing:.5px;
+  font-size:1.15rem;color:#ffffff;margin-bottom:6px;font-weight:600;
+  letter-spacing:.3px;opacity:.95;
 }
 .oe8y-fsub{
-  font-size:.88rem;color:#8b949e;font-style:italic;margin-bottom:20px;
+  font-size:.88rem;color:#dbeafe;font-style:italic;margin-bottom:1.5rem;
+  opacity:.9;
 }
 .oe8y-fbtn{
   display:inline-block;padding:12px 32px;
-  background:linear-gradient(135deg,#e6a817,#d4960f);
-  color:#0d1117;text-decoration:none !important;border-radius:8px;
-  font-weight:700;font-size:.9rem;letter-spacing:1px;
-  transition:transform .2s,box-shadow .2s;
-  font-family:'Courier New',monospace;
+  background:#ffffff;color:#2563eb;
+  text-decoration:none !important;border-radius:8px;
+  font-weight:700;font-size:.9rem;letter-spacing:.5px;
+  transition:all .2s;
+  box-shadow:0 4px 6px -1px rgba(0,0,0,0.2);
 }
 .oe8y-fbtn:hover{
+  background:#f1f5f9;
   transform:translateY(-2px);
-  box-shadow:0 4px 20px rgba(230,168,23,.4);
-  color:#0d1117;text-decoration:none !important;
+  box-shadow:0 8px 16px -4px rgba(0,0,0,0.3);
+  color:#1d4ed8 !important;
 }
 .oe8y-flinks{
-  margin-top:14px;display:flex;justify-content:center;gap:20px;
+  margin-top:1rem;display:flex;justify-content:center;gap:1.5rem;
   flex-wrap:wrap;font-size:.82rem;
 }
+.oe8y-flinks a{color:#dbeafe;font-weight:500}
+.oe8y-flinks a:hover{color:#ffffff}
 
 /* --- Responsive --- */
 @media(max-width:700px){
-  .oe8y-g{grid-template-columns:1fr}
-  .oe8y-call{font-size:2.6rem;letter-spacing:4px}
+  .oe8y-g{grid-template-columns:1fr;gap:1.5rem}
+  .oe8y-g1{gap:1.5rem}
   .oe8y-about{flex-direction:column;align-items:center;text-align:center}
   .oe8y-photo{width:90px;height:90px}
-  .oe8y{padding:12px}
+  .oe8y{padding:1rem}
+  .oe8y-hero{padding:2rem 1.5rem}
+  .oe8y-c{padding:1.2rem}
+  .oe8y-lg{grid-template-columns:repeat(auto-fit,minmax(70px,1fr))}
 }
 </style>
 
@@ -269,6 +292,9 @@
       <span>QRV since 2022</span>
     </div>
     <div class="oe8y-tag">&ldquo;Let your enthusiasm cause QRM&rdquo;</div>
+    <div style="margin-top:1.5rem;font-size:.85rem;color:#94a3b8">
+      <a href="https://oeradio.at" target="_blank" style="color:#3b82f6;font-weight:600">oeradio.at</a> &middot; All Calls Welcome
+    </div>
   </div>
 
   <!-- ███ ABOUT + OPERATING ███ -->
@@ -462,10 +488,13 @@
     <div class="oe8y-c">
       <div class="oe8y-ch">
         <span class="oe8y-ci ib">&#9898;</span>
-        <span class="oe8y-ct">Recent QSOs &mdash; ClubLog</span>
+        <span class="oe8y-ct">Log Search</span>
       </div>
+      <p style="color:#94a3b8;font-size:.85rem;margin-bottom:1rem">
+        Search my complete log via <a href="https://clublog.org/logsearch/OE8YML" target="_blank" style="font-weight:600">Club Log</a>
+      </p>
       <div class="oe8y-iw">
-        <iframe src="https://clublog.org/last10_iframe.php?call=oe8yml" height="320" loading="lazy"></iframe>
+        <iframe src="https://clublog.org/logsearch.php?log=OE8YML&iframe=1" height="320" scrolling="yes" loading="lazy"></iframe>
       </div>
     </div>
   </div>
@@ -486,11 +515,11 @@
         <span class="oe8y-ci ir">&#9655;</span>
         <span class="oe8y-ct">Listen Live</span>
       </div>
-      <p style="color:#c9d1d9;font-size:.88rem;margin-bottom:16px">
+      <p style="color:#e2e8f0;font-size:.9rem;margin-bottom:1rem;line-height:1.6">
         Tune in to multiple bands in real-time via the WebRX.AT online receiver.
       </p>
-      <div style="text-align:center;margin:20px 0">
-        <a class="oe8y-rxbtn" href="https://webrx.at" target="_blank">&#9655; WebRX.AT</a>
+      <div style="text-align:center;margin:1.5rem 0">
+        <a class="oe8y-btn" href="https://webrx.at" target="_blank">&#9655; Listen on WebRX.AT</a>
       </div>
     </div>
   </div>
@@ -501,12 +530,31 @@
   <!-- ███ OERADIO ███ -->
   <div class="oe8y-feat">
     <div class="oe8y-fn">OERADIO.AT</div>
-    <div class="oe8y-fs">All Calls Welcome.</div>
-    <div class="oe8y-fsub">Gemeinsam funken. Lernen. Entdecken.</div>
-    <a class="oe8y-fbtn" href="https://oeradio.at" target="_blank">&#9655; oeradio.at</a>
+    <div class="oe8y-fs">All Calls Welcome</div>
+    <div class="oe8y-fsub">Gemeinsam funken &middot; Lernen &middot; Entdecken</div>
+    <a class="oe8y-fbtn" href="https://oeradio.at" target="_blank">Visit OERadio.AT</a>
     <div class="oe8y-flinks">
-      <a href="https://oeradio.at/oe8yml/" target="_blank">OE8YML Profile &#8599;</a>
-      <a href="https://oeradio.at" target="_blank">Digital QSL Generator &#8599;</a>
+      <a href="https://oeradio.at/oe8yml/" target="_blank">My OERadio Profile</a>
+      <span style="color:#dbeafe;opacity:.5">&middot;</span>
+      <a href="https://oeradio.at" target="_blank">Digital QSL Generator</a>
+      <span style="color:#dbeafe;opacity:.5">&middot;</span>
+      <a href="https://webrx.at" target="_blank">WebRX.AT</a>
+    </div>
+  </div>
+
+  <!-- ███ OERADIO NEWS ███ -->
+  <div class="oe8y-g1">
+    <div class="oe8y-c">
+      <div class="oe8y-ch">
+        <span class="oe8y-ci ib">&#128240;</span>
+        <span class="oe8y-ct">OERadio News &amp; Updates</span>
+      </div>
+      <p style="color:#94a3b8;font-size:.85rem;margin-bottom:1rem">
+        Latest posts from <a href="https://oeradio.at/en/" target="_blank" style="font-weight:600">oeradio.at</a>
+      </p>
+      <div class="oe8y-iw" style="background:#0f172a;padding:0">
+        <iframe src="https://achildrenmile.github.io/qrzprofiles/feed-widget.html" style="background:#0f172a" height="500" loading="lazy"></iframe>
+      </div>
     </div>
   </div>
 
@@ -517,8 +565,8 @@
         <span class="oe8y-ci ia">&#9889;</span>
         <span class="oe8y-ct">Next Generation</span>
       </div>
-      <p style="color:#c9d1d9;font-size:.88rem;margin-bottom:12px">
-        Active with <a href="https://www.qrz.com/db/OE8JOTA" target="_blank"><strong>OE8JOTA</strong></a> and the <strong>Jambuleers on the Air</strong> every October &mdash; bringing scouting and amateur radio together, inspiring young operators to get on the air.
+      <p style="color:#e2e8f0;font-size:.9rem;margin-bottom:1rem;line-height:1.6">
+        Active with <a href="https://www.qrz.com/db/OE8JOTA" target="_blank" style="font-weight:600"><strong>OE8JOTA</strong></a> and the <strong>Jambuleers on the Air</strong> every October &mdash; bringing scouting and amateur radio together, inspiring young operators to get on the air.
       </p>
       <div class="oe8y-bg">
         <span class="oe8y-b bb">OE8JOTA</span>
@@ -578,19 +626,22 @@
         <span class="oe8y-qb qa">&#10003; ClubLog &mdash; auto</span>
         <span class="oe8y-qb qm">&#9675; LoTW &mdash; weekly</span>
       </div>
-      <p style="color:#8b949e;font-size:.82rem;margin-top:12px">
-        Digital QSL via <a href="https://oeradio.at" target="_blank">oeradio.at</a>
+      <p style="color:#94a3b8;font-size:.85rem;margin-top:1rem">
+        Digital QSL via <a href="https://oeradio.at" target="_blank" style="font-weight:600">oeradio.at</a>
       </p>
     </div>
   </div>
 
   <!-- ███ FOOTER ███ -->
   <div class="oe8y-ft">
-    <p style="color:#8b949e;font-size:.9rem;margin-bottom:16px">Hope to hear you on the bands or see you on the waterfall soon.</p>
+    <p style="color:#94a3b8;font-size:.95rem;margin-bottom:1.5rem;line-height:1.6">Hope to hear you on the bands or see you on the waterfall soon.</p>
     <div class="oe8y-ms">&mdash; &middot; &mdash;</div>
     <div class="oe8y-73">73</div>
     <div class="oe8y-de">de OE8YML</div>
-    <div class="oe8y-ms" style="margin-top:8px">&middot; &mdash; &middot; &mdash; &middot;</div>
+    <div class="oe8y-ms" style="margin-top:1rem">&middot; &mdash; &middot; &mdash; &middot;</div>
+    <p style="color:#64748b;font-size:.75rem;margin-top:2rem">
+      Powered by <a href="https://oeradio.at" target="_blank" style="color:#3b82f6;font-weight:600">OERadio.AT</a>
+    </p>
   </div>
 
 </div>
