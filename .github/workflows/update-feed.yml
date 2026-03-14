@@ -14,16 +14,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Generate feed widget HTML
+      - name: Generate feed content and update QRZ pages
         run: |
           python3 << 'PYEOF'
           import urllib.request
           import xml.etree.ElementTree as ET
           import html
+          import re
+          import glob
           from datetime import datetime
 
           RSS_URL = "https://oeradio.at/en/feed/"
-          OUTPUT = "docs/feed-widget.html"
           MAX_ITEMS = 6
 
           try:
@@ -45,10 +46,14 @@ jobs:
               print("No items found in feed")
               exit(1)
 
-          parts = []
-          parts.append('<!DOCTYPE html>')
-          parts.append('<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>')
-          parts.append('<body style="margin:0;padding:1rem;font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;font-size:0.9rem;line-height:1.6">')
+          # Generate standalone feed-widget.html for docs/
+          standalone_parts = []
+          standalone_parts.append('<!DOCTYPE html>')
+          standalone_parts.append('<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>')
+          standalone_parts.append('<body style="margin:0;padding:1rem;font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;font-size:0.9rem;line-height:1.6">')
+
+          # Generate inline feed items for QRZ pages
+          inline_parts = []
 
           for i, item in enumerate(items):
               title_el = item.find("title")
@@ -69,35 +74,76 @@ jobs:
 
               desc = ""
               if desc_el is not None and desc_el.text:
-                  import re
                   d = re.sub(r"<[^>]+>", "", desc_el.text)
                   d = html.unescape(d)
                   d = re.sub(r"\s+", " ", d).strip()
-                  if len(d) > 180:
-                      d = d[:180] + "..."
-                  desc = html.escape(d)
+                  if len(d) > 150:
+                      d = d[:150] + "..."
+                  # Use HTML entities for special chars
+                  d = d.replace("&", "&#38;").replace('"', "&#34;").replace("'", "&#8217;").replace("<", "&lt;").replace(">", "&gt;")
+                  d = d.replace("\u2013", "&#8211;").replace("\u2014", "&#8212;").replace("\u201c", "&#8220;").replace("\u201d", "&#8221;")
+                  desc = d
+
+              title_safe = title.replace("\u2013", "&#8211;").replace("\u2014", "&#8212;").replace("\\!", "!").replace("'", "&#8217;")
 
               border = "border-bottom:1px solid #334155;" if i < len(items) - 1 else ""
 
-              parts.append(f'<div style="margin-bottom:1.5rem;padding-bottom:1.5rem;{border}">')
-              parts.append(f'<div style="margin-bottom:0.5rem"><a href="{link}" target="_blank" style="color:#3b82f6;text-decoration:none;font-weight:600;font-size:0.95rem">{title}</a></div>')
-              parts.append(f'<div style="color:#64748b;font-size:0.75rem;margin-bottom:0.5rem">{date_str}</div>')
-              parts.append(f'<div style="color:#94a3b8;font-size:0.85rem;line-height:1.5">{desc}</div>')
-              parts.append('</div>')
+              # Standalone version
+              standalone_parts.append(f'<div style="margin-bottom:1.5rem;padding-bottom:1.5rem;{border}">')
+              standalone_parts.append(f'<div style="margin-bottom:0.5rem"><a href="{link}" target="_blank" style="color:#3b82f6;text-decoration:none;font-weight:600;font-size:0.95rem">{title_safe}</a></div>')
+              standalone_parts.append(f'<div style="color:#64748b;font-size:0.75rem;margin-bottom:0.5rem">{date_str}</div>')
+              standalone_parts.append(f'<div style="color:#94a3b8;font-size:0.85rem;line-height:1.5">{desc}</div>')
+              standalone_parts.append('</div>')
 
-          parts.append('</body></html>')
+              # Inline version for QRZ pages
+              inline_parts.append(f'      <div style="padding:12px 0;{border}">')
+              inline_parts.append(f'        <div style="margin-bottom:4px"><a href="{link}" target="_blank" style="color:#3b82f6;text-decoration:none;font-weight:600;font-size:.9rem">{title_safe}</a></div>')
+              inline_parts.append(f'        <div style="color:#64748b;font-size:.7rem;margin-bottom:4px">{date_str}</div>')
+              inline_parts.append(f'        <div style="color:#94a3b8;font-size:.82rem;line-height:1.5">{desc}</div>')
+              inline_parts.append('      </div>')
 
-          with open(OUTPUT, "w", encoding="utf-8") as f:
-              f.write("\n".join(parts))
+          standalone_parts.append('</body></html>')
 
-          print(f"Generated {OUTPUT} with {len(items)} items")
+          # Write standalone feed widget
+          with open("docs/feed-widget.html", "w", encoding="utf-8") as f:
+              f.write("\n".join(standalone_parts))
+          print(f"Generated docs/feed-widget.html with {len(items)} items")
+
+          # Update inline feed in QRZ page files
+          inline_html = "\n".join(inline_parts)
+          feed_block = f'''      <div style="padding:4px 0">
+          {inline_html}
+      </div>
+      <div style="text-align:center;padding-top:1rem">
+        <a href="https://oeradio.at/en/" target="_blank" style="color:#3b82f6;font-size:.82rem;font-weight:600">View all articles on oeradio.at &rarr;</a>
+      </div>'''
+
+          # Pattern to match the feed content block in QRZ pages
+          pattern = r'(<div style="padding:4px 0">)\s*\n.*?(<div style="text-align:center;padding-top:1rem">.*?</div>)'
+
+          for qrz_file in glob.glob("*_qrz_page.html"):
+              with open(qrz_file, "r", encoding="utf-8") as f:
+                  content = f.read()
+              if "padding:4px 0" in content and "View all articles on oeradio.at" in content:
+                  new_content = re.sub(
+                      r'<div style="padding:4px 0">.*?<div style="text-align:center;padding-top:1rem">.*?</div>',
+                      feed_block,
+                      content,
+                      flags=re.DOTALL
+                  )
+                  if new_content != content:
+                      with open(qrz_file, "w", encoding="utf-8") as f:
+                          f.write(new_content)
+                      print(f"Updated inline feed in {qrz_file}")
+                  else:
+                      print(f"No changes needed for {qrz_file}")
           PYEOF
 
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/feed-widget.html
+          git add docs/feed-widget.html *_qrz_page.html
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
