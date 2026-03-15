@@ -69,10 +69,6 @@ function fmt_time($t) {
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;padding:0.75rem;font-size:0.85rem}
-.stats{display:flex;gap:0.5rem;margin-bottom:0.75rem}
-.stat{flex:1;background:#1e293b;border-radius:8px;padding:0.5rem;text-align:center}
-.stat-v{font-size:1.05rem;font-weight:700;color:#3b82f6}
-.stat-l{font-size:0.68rem;color:#64748b;margin-top:2px}
 .card{background:#1e293b;border:1px solid #334155;border-radius:8px;overflow:hidden;margin-bottom:0.75rem}
 .ch{padding:.35rem .6rem;background:#1a2744;font-size:.68rem;font-weight:600;color:#94a3b8;letter-spacing:.05em;text-transform:uppercase}
 table{width:100%;border-collapse:collapse}
@@ -90,11 +86,6 @@ button{background:#3b82f6;border:none;border-radius:8px;padding:8px 16px;color:#
 <body>
 
 <?php if ($stats): ?>
-<div class="stats">
-  <div class="stat"><div class="stat-v"><?= number_format($stats['total']) ?></div><div class="stat-l">QSOs</div></div>
-  <div class="stat"><div class="stat-v"><?= (int)($stats['dxcc'] ?? 0) ?></div><div class="stat-l">DXCCs</div></div>
-</div>
-
 <div class="card">
 <div class="ch">Letzte QSOs</div>
 <table>
