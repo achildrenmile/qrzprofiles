@@ -318,7 +318,7 @@ jobs:
           ax.scatter([home_lon], [home_lat], s=60, c='#ef4444',
                      transform=ccrs.PlateCarree(), zorder=5, linewidths=0)
 
-          ax.outline_patch.set_visible(False)
+          ax.spines['geo'].set_visible(False)
           plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
           plt.savefig('docs/qso-map.png', dpi=130, bbox_inches='tight',
                       facecolor='#0f172a', pad_inches=0.05)
