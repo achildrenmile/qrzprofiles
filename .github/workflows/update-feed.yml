@@ -300,28 +300,32 @@ jobs:
           # OE8YML home: JN66TO
           home_lat, home_lon = grid_to_latlon("JN66TO")
 
-          fig = plt.figure(figsize=(14, 7), facecolor='#0f172a')
+          fig = plt.figure(figsize=(14, 7), facecolor='#050d1a')
           ax = fig.add_subplot(1, 1, 1, projection=ccrs.PlateCarree())
           ax.set_global()
-          ax.set_facecolor('#0a1020')
+          ax.set_facecolor('#050d1a')
 
-          ax.add_feature(cfeature.OCEAN.with_scale('110m'), facecolor='#0a1020', zorder=0)
-          ax.add_feature(cfeature.LAND.with_scale('110m'),  facecolor='#1a2744', zorder=1)
-          ax.add_feature(cfeature.COASTLINE.with_scale('110m'), edgecolor='#334155', linewidth=0.5, zorder=2)
-          ax.add_feature(cfeature.BORDERS.with_scale('110m'),   edgecolor='#1e3050', linewidth=0.3, zorder=2)
+          ax.add_feature(cfeature.OCEAN.with_scale('110m'), facecolor='#050d1a', zorder=0)
+          ax.add_feature(cfeature.LAND.with_scale('110m'),  facecolor='#0f2336', zorder=1)
+          ax.add_feature(cfeature.COASTLINE.with_scale('110m'), edgecolor='#2a5a8a', linewidth=0.6, zorder=2)
+          ax.add_feature(cfeature.LAKES.with_scale('110m'),  facecolor='#050d1a', zorder=2)
 
-          # QSO partner dots
-          ax.scatter(lons, lats, s=4, c='#3b82f6', alpha=0.55,
-                     transform=ccrs.PlateCarree(), zorder=4, linewidths=0)
+          # QSO partner dots — glow effect with layered scatter
+          kw = dict(transform=ccrs.PlateCarree(), linewidths=0)
+          ax.scatter(lons, lats, s=40,  c='#38bdf8', alpha=0.04, zorder=3, **kw)
+          ax.scatter(lons, lats, s=12,  c='#38bdf8', alpha=0.15, zorder=4, **kw)
+          ax.scatter(lons, lats, s=4,   c='#7dd3fc', alpha=0.70, zorder=5, **kw)
 
-          # Home dot
-          ax.scatter([home_lon], [home_lat], s=60, c='#ef4444',
-                     transform=ccrs.PlateCarree(), zorder=5, linewidths=0)
+          # Home dot — amber with ring
+          ax.scatter([home_lon], [home_lat], s=220, c='#f59e0b', alpha=0.20,
+                     transform=ccrs.PlateCarree(), zorder=6, linewidths=0)
+          ax.scatter([home_lon], [home_lat], s=70,  c='#fbbf24',
+                     transform=ccrs.PlateCarree(), zorder=7, linewidths=0)
 
           ax.spines['geo'].set_visible(False)
           plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-          plt.savefig('docs/qso-map.png', dpi=130, bbox_inches='tight',
-                      facecolor='#0f172a', pad_inches=0.05)
+          plt.savefig('docs/qso-map.png', dpi=140, bbox_inches='tight',
+                      facecolor='#050d1a', pad_inches=0.04)
           plt.close()
           print(f"Generated docs/qso-map.png")
           PYEOF
