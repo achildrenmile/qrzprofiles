@@ -85,6 +85,11 @@ button{background:#3b82f6;border:none;border-radius:8px;padding:8px 16px;color:#
 </head>
 <body>
 
+<div class="card" style="margin-bottom:0.75rem">
+<div class="ch">QSO Map &mdash; OE8YML</div>
+<img src="https://achildrenmile.github.io/qrzprofiles/qso-map.png" style="width:100%;display:block">
+</div>
+
 <?php if ($stats): ?>
 <div class="card">
 <div class="ch">Letzte QSOs</div>

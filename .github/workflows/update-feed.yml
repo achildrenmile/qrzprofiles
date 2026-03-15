@@ -232,11 +232,107 @@ jobs:
           print(f"Generated docs/wavelog-widget.html ({len(out.encode()):,} bytes)")
           PYEOF
 
+      - name: Generate QSO map
+        run: |
+          pip install matplotlib cartopy --quiet
+          python3 << 'PYEOF'
+          import json, re, math, os
+          import matplotlib
+          matplotlib.use('Agg')
+          import matplotlib.pyplot as plt
+          import matplotlib.patches as mpatches
+          import cartopy.crs as ccrs
+          import cartopy.feature as cfeature
+
+          def adif_field(record, tag):
+              m = re.search(rf'<{tag}:\d+>([^\r\n<]+)', record, re.IGNORECASE)
+              return m.group(1).strip() if m else ""
+
+          def grid_to_latlon(grid):
+              grid = grid.upper().strip()
+              if len(grid) < 4:
+                  return None, None
+              try:
+                  lon = (ord(grid[0]) - ord('A')) * 20 - 180
+                  lat = (ord(grid[1]) - ord('A')) * 10 - 90
+                  lon += int(grid[2]) * 2
+                  lat += int(grid[3]) * 1
+                  if len(grid) >= 6:
+                      lon += (ord(grid[4]) - ord('A') + 0.5) * 2 / 24
+                      lat += (ord(grid[5]) - ord('A') + 0.5) / 24
+                  else:
+                      lon += 1.0
+                      lat += 0.5
+                  return lat, lon
+              except Exception:
+                  return None, None
+
+          # Read ADIF produced by earlier step (re-use already-fetched data via index)
+          # We need gridsquares — fetch fresh ADIF
+          import urllib.request
+          import os
+
+          API_KEY    = os.environ.get("WAVELOG_API_KEY", "")
+          BASE_URL   = "https://wavelog.oeradio.at/index.php/api"
+          STATION_ID = 1
+
+          body = json.dumps({"key": API_KEY, "station_id": STATION_ID,
+                             "fetchfromid": 0, "limit": 25000}).encode()
+          req = urllib.request.Request(f"{BASE_URL}/get_contacts_adif", data=body,
+              headers={"Content-Type": "application/json", "User-Agent": "QSO-Map-Bot"})
+          with urllib.request.urlopen(req, timeout=60) as r:
+              adif = json.loads(r.read()).get("adif", "")
+
+          lats, lons = [], []
+          seen = set()
+          for rec in adif.split("<EOR>"):
+              grid = adif_field(rec, "GRIDSQUARE")
+              if not grid or grid in seen:
+                  continue
+              seen.add(grid)
+              lat, lon = grid_to_latlon(grid)
+              if lat is not None and -90 <= lat <= 90 and -180 <= lon <= 180:
+                  lats.append(lat)
+                  lons.append(lon)
+
+          print(f"Plotting {len(lats)} unique gridsquare locations")
+
+          # OE8YML home: JN66TO
+          home_lat, home_lon = grid_to_latlon("JN66TO")
+
+          fig = plt.figure(figsize=(14, 7), facecolor='#0f172a')
+          ax = fig.add_subplot(1, 1, 1, projection=ccrs.PlateCarree())
+          ax.set_global()
+          ax.set_facecolor('#0a1020')
+
+          ax.add_feature(cfeature.OCEAN.with_scale('110m'), facecolor='#0a1020', zorder=0)
+          ax.add_feature(cfeature.LAND.with_scale('110m'),  facecolor='#1a2744', zorder=1)
+          ax.add_feature(cfeature.COASTLINE.with_scale('110m'), edgecolor='#334155', linewidth=0.5, zorder=2)
+          ax.add_feature(cfeature.BORDERS.with_scale('110m'),   edgecolor='#1e3050', linewidth=0.3, zorder=2)
+
+          # QSO partner dots
+          ax.scatter(lons, lats, s=4, c='#3b82f6', alpha=0.55,
+                     transform=ccrs.PlateCarree(), zorder=4, linewidths=0)
+
+          # Home dot
+          ax.scatter([home_lon], [home_lat], s=60, c='#ef4444',
+                     transform=ccrs.PlateCarree(), zorder=5, linewidths=0)
+
+          ax.outline_patch.set_visible(False)
+          plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
+          plt.savefig('docs/qso-map.png', dpi=130, bbox_inches='tight',
+                      facecolor='#0f172a', pad_inches=0.05)
+          plt.close()
+          print(f"Generated docs/qso-map.png")
+          PYEOF
+        env:
+          WAVELOG_API_KEY: ${{ secrets.WAVELOG_API_KEY }}
+
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/feed-widget.html docs/wavelog-widget.html docs/wavelog-index.json docs/wavelog-stats.json
+          git add docs/feed-widget.html docs/wavelog-widget.html docs/wavelog-index.json docs/wavelog-stats.json docs/qso-map.png
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
