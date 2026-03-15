@@ -146,6 +146,7 @@ jobs:
           all_adif  = all_resp.get("adif", "")
           all_qsos  = []
           index     = {}  # call -> [[date,band,mode], ...]
+          dxcc_set  = set()
 
           for rec in all_adif.split("<EOR>"):
               call = adif_field(rec, "CALL")
@@ -155,11 +156,14 @@ jobs:
               band = adif_field(rec, "BAND")
               mode = adif_field(rec, "MODE")
               time = adif_field(rec, "TIME_ON")
+              dxcc = adif_field(rec, "DXCC")
               all_qsos.append({"call": call, "date": date, "time": time, "band": band, "mode": mode})
               cu = call.upper()
               if cu not in index:
                   index[cu] = []
               index[cu].append([date, band, mode])
+              if dxcc:
+                  dxcc_set.add(dxcc)
 
           # Sort each call's QSOs newest first
           for cu in index:
@@ -176,6 +180,18 @@ jobs:
 
           # Last 10 QSOs for widget display
           recent = list(reversed(all_qsos[-10:]))
+
+          # Write stats JSON (for PHP logsearch page header)
+          stats_obj = {
+              "total": total,
+              "dxcc": len(dxcc_set),
+              "updated": updated,
+              "recent": [{"c": q["call"], "d": q["date"], "t": q["time"], "b": q["band"], "m": q["mode"]} for q in recent]
+          }
+          stats_json = json.dumps(stats_obj, separators=(',', ':'))
+          with open("docs/wavelog-stats.json", "w", encoding="utf-8") as f:
+              f.write(stats_json)
+          print(f"Generated docs/wavelog-stats.json (total={total}, dxcc={len(dxcc_set)})")
 
           def fmt_date(d):
               try: return datetime.strptime(d, "%Y%m%d").strftime("%d.%m.%y")
@@ -220,7 +236,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/feed-widget.html docs/wavelog-widget.html docs/wavelog-index.json
+          git add docs/feed-widget.html docs/wavelog-widget.html docs/wavelog-index.json docs/wavelog-stats.json
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
