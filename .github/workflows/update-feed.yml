@@ -95,14 +95,153 @@ jobs:
           print(f"Generated docs/feed-widget.html with {len(items)} items")
           PYEOF
 
+      - name: Generate Wavelog widget HTML
+        env:
+          WAVELOG_API_KEY: ${{ secrets.WAVELOG_API_KEY }}
+        run: |
+          python3 << 'PYEOF'
+          import urllib.request
+          import urllib.error
+          import json
+          import re
+          import os
+          from datetime import datetime, timezone
+
+          API_KEY = os.environ.get("WAVELOG_API_KEY", "")
+          BASE_URL = "https://wavelog.oeradio.at/index.php/api"
+          STATION_ID = 1
+          QSO_COUNT = 10
+
+          def api_get(path):
+              req = urllib.request.Request(f"{BASE_URL}/{path}", headers={"User-Agent": "QRZ-Widget-Bot"})
+              with urllib.request.urlopen(req, timeout=15) as r:
+                  return json.loads(r.read().decode())
+
+          def api_post(path, data):
+              body = json.dumps(data).encode()
+              req = urllib.request.Request(f"{BASE_URL}/{path}", data=body,
+                  headers={"Content-Type": "application/json", "User-Agent": "QRZ-Widget-Bot"})
+              with urllib.request.urlopen(req, timeout=15) as r:
+                  return json.loads(r.read().decode())
+
+          # Fetch stats
+          try:
+              stats = api_get(f"statistics/{API_KEY}/{STATION_ID}")
+          except Exception as e:
+              print(f"Failed to fetch stats: {e}")
+              exit(1)
+
+          total = int(stats.get("total_qsos", 0))
+          today = int(stats.get("Today", 0))
+          month = int(stats.get("month_qsos", 0))
+          year  = int(stats.get("year_qsos", 0))
+
+          # Fetch latest QSOs (fetchfromid slightly below total to catch recent entries)
+          fetch_from = max(0, total - 60)
+          try:
+              qso_resp = api_post("get_contacts_adif", {
+                  "key": API_KEY,
+                  "station_id": STATION_ID,
+                  "fetchfromid": fetch_from,
+                  "limit": 60
+              })
+          except Exception as e:
+              print(f"Failed to fetch QSOs: {e}")
+              exit(1)
+
+          adif = qso_resp.get("adif", "")
+
+          # Parse ADIF records
+          def adif_field(record, tag):
+              m = re.search(rf'<{tag}:\d+>([^\r\n<]+)', record, re.IGNORECASE)
+              return m.group(1).strip() if m else ""
+
+          raw_qsos = adif.split("<EOR>")
+          qsos = []
+          for rec in raw_qsos:
+              call = adif_field(rec, "CALL")
+              if not call:
+                  continue
+              qsos.append({
+                  "call":    call,
+                  "band":    adif_field(rec, "BAND"),
+                  "mode":    adif_field(rec, "MODE"),
+                  "date":    adif_field(rec, "QSO_DATE"),
+                  "time":    adif_field(rec, "TIME_ON"),
+                  "country": adif_field(rec, "COUNTRY"),
+              })
+
+          # Take last QSO_COUNT entries (most recent last in ADIF)
+          qsos = qsos[-QSO_COUNT:]
+          qsos.reverse()
+
+          # Format date
+          def fmt_date(d):
+              try:
+                  return datetime.strptime(d, "%Y%m%d").strftime("%d.%m.%y")
+              except:
+                  return d
+
+          def fmt_time(t):
+              return f"{t[:2]}:{t[2:4]}" if len(t) >= 4 else t
+
+          updated = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%MZ")
+
+          # Build HTML
+          p = []
+          p.append('<!DOCTYPE html><html><head><meta charset="UTF-8">')
+          p.append('<meta name="viewport" content="width=device-width,initial-scale=1.0"></head>')
+          p.append('<body style="margin:0;padding:0.75rem;font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;font-size:0.85rem">')
+
+          # Stats row
+          p.append('<div style="display:flex;gap:0.5rem;margin-bottom:0.75rem">')
+          for label, val in [("QSOs total", f"{total:,}"), (f"{datetime.now(timezone.utc).year}", str(year)), ("Monat", str(month)), ("Heute", str(today))]:
+              p.append(f'<div style="flex:1;background:#1e293b;border-radius:8px;padding:0.5rem;text-align:center">'
+                       f'<div style="font-size:1.1rem;font-weight:700;color:#3b82f6">{val}</div>'
+                       f'<div style="font-size:0.7rem;color:#64748b;margin-top:2px">{label}</div></div>')
+          p.append('</div>')
+
+          # QSO table
+          if qsos:
+              p.append('<div style="background:#1e293b;border-radius:8px;overflow:hidden">')
+              p.append('<div style="padding:0.4rem 0.75rem;background:#1a2744;font-size:0.7rem;font-weight:600;color:#94a3b8;letter-spacing:0.05em;text-transform:uppercase">Letzte QSOs</div>')
+              p.append('<table style="width:100%;border-collapse:collapse;font-size:0.78rem">')
+              p.append('<tr style="color:#64748b;font-size:0.68rem">'
+                       '<th style="padding:0.3rem 0.5rem;text-align:left;font-weight:500">Datum</th>'
+                       '<th style="padding:0.3rem 0.5rem;text-align:left;font-weight:500">UTC</th>'
+                       '<th style="padding:0.3rem 0.5rem;text-align:left;font-weight:500">Call</th>'
+                       '<th style="padding:0.3rem 0.5rem;text-align:left;font-weight:500">Band</th>'
+                       '<th style="padding:0.3rem 0.5rem;text-align:left;font-weight:500">Mode</th>'
+                       '</tr>')
+              for i, q in enumerate(qsos):
+                  bg = "background:#172032;" if i % 2 == 0 else ""
+                  p.append(f'<tr style="{bg}">'
+                           f'<td style="padding:0.3rem 0.5rem;color:#94a3b8">{fmt_date(q["date"])}</td>'
+                           f'<td style="padding:0.3rem 0.5rem;color:#64748b">{fmt_time(q["time"])}</td>'
+                           f'<td style="padding:0.3rem 0.5rem;color:#e2e8f0;font-weight:600">{q["call"]}</td>'
+                           f'<td style="padding:0.3rem 0.5rem;color:#94a3b8">{q["band"]}</td>'
+                           f'<td style="padding:0.3rem 0.5rem;color:#94a3b8">{q["mode"]}</td>'
+                           f'</tr>')
+              p.append('</table></div>')
+
+          p.append(f'<div style="text-align:right;color:#334155;font-size:0.65rem;margin-top:0.4rem">aktualisiert {updated} &bull; <a href="https://wavelog.oeradio.at" target="_blank" style="color:#334155">Wavelog</a></div>')
+          p.append('</body></html>')
+
+          out = "\n".join(p)
+          with open("docs/wavelog-widget.html", "w", encoding="utf-8") as f:
+              f.write(out)
+          size = len(out.encode("utf-8"))
+          print(f"Generated docs/wavelog-widget.html ({size} bytes, {len(qsos)} QSOs)")
+          PYEOF
+
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/feed-widget.html
+          git add docs/feed-widget.html docs/wavelog-widget.html
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Update OERadio feed widget"
+            git commit -m "Update feed + Wavelog widgets"
             git push
           fi
