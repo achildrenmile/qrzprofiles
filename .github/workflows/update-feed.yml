@@ -243,5 +243,6 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update feed + Wavelog widgets"
+            git pull --rebase
             git push
           fi
