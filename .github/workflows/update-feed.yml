@@ -312,9 +312,9 @@ jobs:
 
           # QSO partner dots — glow effect with layered scatter
           kw = dict(transform=ccrs.PlateCarree(), linewidths=0)
-          ax.scatter(lons, lats, s=40,  c='#38bdf8', alpha=0.04, zorder=3, **kw)
-          ax.scatter(lons, lats, s=12,  c='#38bdf8', alpha=0.15, zorder=4, **kw)
-          ax.scatter(lons, lats, s=4,   c='#7dd3fc', alpha=0.70, zorder=5, **kw)
+          ax.scatter(lons, lats, s=40,  c='#22c55e', alpha=0.05, zorder=3, **kw)
+          ax.scatter(lons, lats, s=12,  c='#22c55e', alpha=0.18, zorder=4, **kw)
+          ax.scatter(lons, lats, s=4,   c='#86efac', alpha=0.80, zorder=5, **kw)
 
           # Home dot — amber with ring
           ax.scatter([home_lon], [home_lat], s=220, c='#f59e0b', alpha=0.20,
