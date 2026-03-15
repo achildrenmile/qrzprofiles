@@ -6,96 +6,82 @@
 <title>Log Search — OE8YML</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;min-height:100vh;padding:1.5rem}
-h1{font-family:'Courier New',monospace;color:#3b82f6;font-size:1.8rem;letter-spacing:4px;margin-bottom:.25rem}
-.sub{color:#64748b;font-size:.85rem;margin-bottom:1.5rem}
-.search-row{display:flex;gap:8px;margin-bottom:1.5rem;max-width:500px}
-input{flex:1;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;color:#f1f5f9;font-size:1rem;outline:none}
+body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;padding:0.75rem;font-size:0.85rem}
+.search-row{display:flex;gap:8px;margin-bottom:0.6rem}
+input{flex:1;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:8px 12px;color:#f1f5f9;font-size:0.85rem;outline:none}
 input:focus{border-color:#3b82f6}
-button{background:#3b82f6;border:none;border-radius:8px;padding:10px 20px;color:#fff;font-weight:600;font-size:.9rem;cursor:pointer}
-#status{color:#64748b;font-size:.85rem;margin-bottom:1rem}
-table{width:100%;border-collapse:collapse;max-width:700px}
-th{text-align:left;padding:.4rem .75rem;color:#64748b;font-size:.75rem;font-weight:500;border-bottom:1px solid #334155;text-transform:uppercase;letter-spacing:.05em}
-td{padding:.5rem .75rem;font-size:.875rem;border-bottom:1px solid #1e293b}
+button{background:#3b82f6;border:none;border-radius:8px;padding:8px 16px;color:#fff;font-weight:600;cursor:pointer;white-space:nowrap}
+#status{color:#64748b;font-size:0.7rem;margin-bottom:0.5rem;min-height:1rem}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:.3rem .6rem;color:#64748b;font-size:.68rem;font-weight:500;border-bottom:1px solid #334155;text-transform:uppercase;letter-spacing:.05em}
+td{padding:.35rem .6rem;font-size:.82rem;border-bottom:1px solid #1a2744}
 td:first-child{color:#e2e8f0;font-weight:700;font-family:'Courier New',monospace}
 td:not(:first-child){color:#94a3b8}
 tr:hover td{background:#1e293b}
-.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:1.25rem;max-width:700px}
-.back{display:inline-block;margin-top:1.5rem;color:#3b82f6;font-size:.85rem;text-decoration:none}
+.card{background:#1e293b;border:1px solid #334155;border-radius:8px;overflow:hidden}
+.card-head{padding:.35rem .6rem;background:#1a2744;font-size:.68rem;font-weight:600;color:#94a3b8;letter-spacing:.05em;text-transform:uppercase}
 </style>
 </head>
 <body>
-<h1>OE8YML</h1>
-<p class="sub">Log Search &bull; <a href="https://wavelog.oeradio.at" target="_blank" style="color:#3b82f6">wavelog.oeradio.at</a></p>
-
 <div class="search-row">
-  <input id="q" type="text" placeholder="Callsign..." autocomplete="off" spellcheck="false">
+  <input id="q" type="text" placeholder="Callsign suchen..." autocomplete="off" spellcheck="false">
   <button onclick="doSearch()">Suchen</button>
 </div>
-
 <div id="status"></div>
 <div id="results"></div>
 
-<a class="back" href="https://www.qrz.com/db/OE8YML" target="_top">&larr; zurück zu QRZ</a>
-
 <script>
-var idx = null;
-var statusEl = document.getElementById('status');
-var resultsEl = document.getElementById('results');
+var idx=null;
+var statusEl=document.getElementById('status');
+var resultsEl=document.getElementById('results');
 
-function loadIndex(cb) {
-  if (idx) { cb(); return; }
-  statusEl.textContent = 'Lade Log-Index...';
+function loadIndex(cb){
+  if(idx){cb();return;}
+  statusEl.textContent='Lade Index...';
   fetch('wavelog-index.json')
-    .then(function(r) { return r.json(); })
-    .then(function(d) {
-      idx = d;
-      statusEl.textContent = idx.t.toLocaleString() + ' QSOs geladen (' + Object.keys(idx.q).length.toLocaleString() + ' unique calls) \u2014 aktualisiert ' + idx.u;
+    .then(function(r){return r.json();})
+    .then(function(d){
+      idx=d;
+      statusEl.textContent=idx.t.toLocaleString()+' QSOs \u2014 '+Object.keys(idx.q).length.toLocaleString()+' Calls \u2014 '+idx.u;
       cb();
     })
-    .catch(function() { statusEl.textContent = 'Fehler beim Laden des Index.'; });
+    .catch(function(){statusEl.textContent='Fehler beim Laden.';});
 }
 
-function doSearch() {
-  var q = document.getElementById('q').value.trim().toUpperCase();
-  if (!q) return;
-  loadIndex(function() { showResults(q); });
+function doSearch(){
+  var q=document.getElementById('q').value.trim().toUpperCase();
+  if(!q)return;
+  loadIndex(function(){showResults(q);});
 }
 
-function showResults(q) {
-  if (!idx) return;
-  var keys = Object.keys(idx.q).filter(function(k) { return k.includes(q); }).sort();
-  if (!keys.length) {
-    resultsEl.innerHTML = '<p style="color:#64748b">Kein QSO mit <strong style="color:#f1f5f9">' + q + '</strong> gefunden.</p>';
+function showResults(q){
+  if(!idx)return;
+  var keys=Object.keys(idx.q).filter(function(k){return k.includes(q);}).sort();
+  if(!keys.length){
+    resultsEl.innerHTML='<p style="color:#64748b;padding:.4rem">Kein QSO mit <strong style="color:#f1f5f9">'+q+'</strong> gefunden.</p>';
     return;
   }
-  var rows = '';
-  keys.forEach(function(call) {
-    idx.q[call].forEach(function(e) {
-      var d = e[0];
-      var date = d.slice(6,8)+'.'+d.slice(4,6)+'.'+d.slice(0,4);
-      rows += '<tr><td>' + call + '</td><td>' + date + '</td><td>' + e[1] + '</td><td>' + e[2] + '</td></tr>';
+  var rows='';
+  keys.forEach(function(call){
+    idx.q[call].forEach(function(e){
+      var d=e[0];
+      var date=d.slice(6,8)+'.'+d.slice(4,6)+'.'+d.slice(2,4);
+      rows+='<tr><td>'+call+'</td><td>'+date+'</td><td>'+e[1]+'</td><td>'+e[2]+'</td></tr>';
     });
   });
-  var lbl = keys.length === 1 ? '1 Callsign' : keys.length + ' Callsigns';
-  resultsEl.innerHTML = '<div class="card">'
-    + '<p style="color:#64748b;font-size:.78rem;margin-bottom:.75rem">' + lbl + ' gefunden f&uuml;r <strong style="color:#3b82f6">' + q + '</strong></p>'
-    + '<table><thead><tr><th>Call</th><th>Datum</th><th>Band</th><th>Mode</th></tr></thead><tbody>' + rows + '</tbody></table>'
-    + '</div>';
+  var lbl=keys.length===1?'1 Callsign':keys.length+' Callsigns';
+  resultsEl.innerHTML='<div class="card"><div class="card-head">'+lbl+' f&uuml;r '+q+'</div>'
+    +'<table><thead><tr><th>Call</th><th>Datum</th><th>Band</th><th>Mode</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
 }
 
-// Auto-search from URL param
-var params = new URLSearchParams(window.location.search);
-var callParam = params.get('call');
-if (callParam) {
-  var inp = document.getElementById('q');
-  inp.value = callParam.toUpperCase();
-  loadIndex(function() { showResults(callParam.toUpperCase()); });
+var params=new URLSearchParams(window.location.search);
+var cp=params.get('call');
+if(cp){
+  document.getElementById('q').value=cp.toUpperCase();
+  loadIndex(function(){showResults(cp.toUpperCase());});
 }
 
-document.getElementById('q').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') doSearch();
-});
+document.getElementById('q').addEventListener('keydown',function(e){if(e.key==='Enter')doSearch();});
 </script>
 </body>
 </html>
