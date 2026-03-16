@@ -248,9 +248,9 @@ jobs:
 
           img = Image.open(card_path).convert("RGBA")
           w, h = img.size
-          # Signature region: bottom-right (~58-98% x, 72-96% y)
-          x1, y1 = int(w*0.58), int(h*0.72)
-          x2, y2 = int(w*0.98), int(h*0.96)
+          # Signature region: bottom-right (~55-98% x, 84-98% y)
+          x1, y1 = int(w*0.55), int(h*0.84)
+          x2, y2 = int(w*0.98), int(h*0.98)
           sig = img.crop((x1, y1, x2, y2))
 
           # Make white/near-white pixels transparent
