@@ -236,27 +236,15 @@ jobs:
 
       - name: Extract signature from QSL card
         run: |
+          pip install Pillow --quiet
           python3 << 'PYEOF'
-          import urllib.request, base64, struct, zlib, io
+          import os
+          from PIL import Image
 
-          # Only regenerate if source card changes or sig missing
-          import os, hashlib
           card_path = "docs/oe8yml-card-full.png"
           sig_path  = "docs/oe8yml-sig.png"
           if not os.path.exists(card_path):
-              print("No card found, skipping signature extraction")
-              exit(0)
-
-          pip_needed = True
-          try:
-              from PIL import Image
-              pip_needed = False
-          except ImportError:
-              pass
-          if pip_needed:
-              import subprocess
-              subprocess.run(["pip", "install", "Pillow", "--quiet"], check=True)
-              from PIL import Image
+              print("No card found, skipping"); exit(0)
 
           img = Image.open(card_path).convert("RGBA")
           w, h = img.size
