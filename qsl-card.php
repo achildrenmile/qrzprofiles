@@ -106,7 +106,7 @@ a.btn.pr{background:#1e293b;border:1px solid #334155;color:#94a3b8}
 <?= $svg ?>
 <div class="btns">
   <button onclick="dlSvg()">&#11015; Download SVG</button>
-  <button onclick="window.print()">&#128438; Print</button>
+  <button onclick="window.print()"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px"><path d="M18 3H6v4H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2v3h12v-3h2a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2V3zm-2 0v4H8V3h8zm2 14H6v-4h12v4zm2-6a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>Print</button>
 </div>
 <div class="hint">QSL card for <?= htmlspecialchars($call) ?> · <?= htmlspecialchars($date_fmt) ?> · <?= htmlspecialchars($band) ?> · <?= htmlspecialchars($mode) ?></div>
 <script>
