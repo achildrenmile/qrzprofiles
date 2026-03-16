@@ -27,7 +27,7 @@ else                                       $rst = '59';
 // Shorten long callsigns for display
 $call_size = strlen($call) > 8 ? 42 : (strlen($call) > 6 ? 52 : 62);
 
-header('Content-Type: image/svg+xml');
+header('Content-Type: application/octet-stream');
 header('Content-Disposition: attachment; filename="QSL-OE8YML-' . $call . ($date ? '-'.$date : '') . '.svg"');
 header('Cache-Control: no-store');
 ?>
