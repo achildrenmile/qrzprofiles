@@ -75,9 +75,10 @@ ob_start(); ?>
   <text x="<?= $bx + $box_w/2 ?>" y="218" text-anchor="middle" font-family="'Courier New',monospace" font-size="17" font-weight="bold" fill="#f1f5f9"><?= $f[1] ?></text>
   <?php endforeach; ?>
   <rect x="40" y="252" width="510" height="1" fill="#1e293b"/>
-  <text x="295" y="285" text-anchor="middle" font-family="'Courier New',monospace" font-size="11" fill="#475569" letter-spacing="4">73 DE</text>
-  <text x="295" y="330" text-anchor="middle" font-family="'Courier New',monospace" font-size="46" font-weight="bold" fill="#f1f5f9" letter-spacing="8">OE8YML</text>
-  <text x="295" y="355" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#475569">Michael · JN66TO · Carinthia, Austria</text>
+  <text x="160" y="285" text-anchor="middle" font-family="'Courier New',monospace" font-size="11" fill="#475569" letter-spacing="4">73 DE</text>
+  <text x="160" y="330" text-anchor="middle" font-family="'Courier New',monospace" font-size="46" font-weight="bold" fill="#f1f5f9" letter-spacing="8">OE8YML</text>
+  <text x="160" y="352" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#475569">Michael · JN66TO · Carinthia, Austria</text>
+  <image href="https://achildrenmile.github.io/qrzprofiles/oe8yml-sig.png" x="330" y="248" width="230" height="120" preserveAspectRatio="xMidYMid meet"/>
   <rect x="6" y="387" width="578" height="17" fill="#0f172a"/>
   <text x="295" y="399" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#334155" letter-spacing="1">QSL · wavelog.oeradio.at · oeradio.at</text>
 </svg>

@@ -234,6 +234,51 @@ jobs:
           print(f"Generated docs/wavelog-widget.html ({len(out.encode()):,} bytes)")
           PYEOF
 
+      - name: Extract signature from QSL card
+        run: |
+          python3 << 'PYEOF'
+          import urllib.request, base64, struct, zlib, io
+
+          # Only regenerate if source card changes or sig missing
+          import os, hashlib
+          card_path = "docs/oe8yml-card-full.png"
+          sig_path  = "docs/oe8yml-sig.png"
+          if not os.path.exists(card_path):
+              print("No card found, skipping signature extraction")
+              exit(0)
+
+          pip_needed = True
+          try:
+              from PIL import Image
+              pip_needed = False
+          except ImportError:
+              pass
+          if pip_needed:
+              import subprocess
+              subprocess.run(["pip", "install", "Pillow", "--quiet"], check=True)
+              from PIL import Image
+
+          img = Image.open(card_path).convert("RGBA")
+          w, h = img.size
+          # Signature region: bottom-right (~58-98% x, 72-96% y)
+          x1, y1 = int(w*0.58), int(h*0.72)
+          x2, y2 = int(w*0.98), int(h*0.96)
+          sig = img.crop((x1, y1, x2, y2))
+
+          # Make white/near-white pixels transparent
+          pixels = sig.load()
+          sw, sh = sig.size
+          for py in range(sh):
+              for px in range(sw):
+                  r, g, b, a = pixels[px, py]
+                  brightness = (r + g + b) / 3
+                  if brightness > 230:
+                      pixels[px, py] = (r, g, b, 0)
+
+          sig.save(sig_path, "PNG")
+          print(f"Signature extracted: {sw}x{sh}px -> {sig_path}")
+          PYEOF
+
       - name: Generate QSO map
         run: |
           pip install matplotlib cartopy --quiet
@@ -338,7 +383,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/feed-widget.html docs/wavelog-widget.html docs/wavelog-index.json docs/wavelog-stats.json docs/qso-map.png
+          git add docs/feed-widget.html docs/wavelog-widget.html docs/wavelog-index.json docs/wavelog-stats.json docs/qso-map.png docs/oe8yml-sig.png
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
