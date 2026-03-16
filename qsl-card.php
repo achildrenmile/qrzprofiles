@@ -10,7 +10,7 @@ if (!$call) { http_response_code(400); exit('Missing call'); }
 
 $date_fmt = $date;
 if (strlen($date) === 8)
-    $date_fmt = substr($date,6,2).'.'.substr($date,4,2).'.'.substr($date,0,4);
+    $date_fmt = substr($date,6,2).'.'.substr($date,4,2).'.'.substr($date,2,2);
 
 $time_fmt = '';
 if (strlen($time) >= 4) $time_fmt = substr($time,0,2).':'.substr($time,2,2).' UTC';
