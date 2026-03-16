@@ -241,30 +241,24 @@ jobs:
           import os
           from PIL import Image
 
-          card_path = "docs/oe8yml-card-full.png"
-          sig_path  = "docs/oe8yml-sig.png"
-          if not os.path.exists(card_path):
-              print("No card found, skipping"); exit(0)
+          raw_path = "docs/oe8yml-sig-raw.png"
+          sig_path = "docs/oe8yml-sig.png"
+          if not os.path.exists(raw_path):
+              print("No raw signature found, skipping"); exit(0)
 
-          img = Image.open(card_path).convert("RGBA")
-          w, h = img.size
-          # Signature region: bottom-right (~55-98% x, 84-98% y)
-          x1, y1 = int(w*0.55), int(h*0.84)
-          x2, y2 = int(w*0.98), int(h*0.98)
-          sig = img.crop((x1, y1, x2, y2))
-
-          # Make white/near-white pixels transparent
+          sig = Image.open(raw_path).convert("RGBA")
           pixels = sig.load()
           sw, sh = sig.size
+          # Make light/grey background transparent, keep red signature
           for py in range(sh):
               for px in range(sw):
                   r, g, b, a = pixels[px, py]
                   brightness = (r + g + b) / 3
-                  if brightness > 230:
+                  if brightness > 200:
                       pixels[px, py] = (r, g, b, 0)
 
           sig.save(sig_path, "PNG")
-          print(f"Signature extracted: {sw}x{sh}px -> {sig_path}")
+          print(f"Signature processed: {sw}x{sh}px -> {sig_path}")
           PYEOF
 
       - name: Generate QSO map
