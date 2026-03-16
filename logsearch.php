@@ -128,7 +128,7 @@ button{background:#3b82f6;border:none;border-radius:8px;padding:8px 16px;color:#
 <tbody>
 <?php foreach ($results as $call => $qsos): ?>
 <?php foreach ($qsos as $e): ?>
-<?php $qsl = 'https://oeradio.at/qsl-card.php?call='.urlencode($call).'&date='.urlencode($e[0]).'&band='.urlencode($e[1]).'&mode='.urlencode($e[2]); ?>
+<?php $qsl = 'https://oeradio.at/qsl-card.php?call='.urlencode($call).'&date='.urlencode($e[0]).'&band='.urlencode($e[1]).'&mode='.urlencode($e[2]).'&rst_s='.urlencode($e[3] ?? '').'&rst_r='.urlencode($e[4] ?? ''); ?>
 <tr><td><?= htmlspecialchars($call) ?></td><td><?= fmt_date($e[0]) ?></td><td><?= htmlspecialchars($e[1]) ?></td><td><?= htmlspecialchars($e[2]) ?></td><td><a href="<?= $qsl ?>" target="_blank" style="color:#3b82f6;font-size:.68rem;border:1px solid #1e3a5f;padding:2px 7px;border-radius:4px;white-space:nowrap;text-decoration:none">QSL ↓</a></td></tr>
 <?php endforeach; ?>
 <?php endforeach; ?>

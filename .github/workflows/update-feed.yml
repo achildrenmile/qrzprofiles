@@ -152,16 +152,18 @@ jobs:
               call = adif_field(rec, "CALL")
               if not call:
                   continue
-              date = adif_field(rec, "QSO_DATE")
-              band = adif_field(rec, "BAND")
-              mode = adif_field(rec, "MODE")
-              time = adif_field(rec, "TIME_ON")
-              dxcc = adif_field(rec, "DXCC")
+              date  = adif_field(rec, "QSO_DATE")
+              band  = adif_field(rec, "BAND")
+              mode  = adif_field(rec, "MODE")
+              time  = adif_field(rec, "TIME_ON")
+              dxcc  = adif_field(rec, "DXCC")
+              rst_s = adif_field(rec, "RST_SENT")
+              rst_r = adif_field(rec, "RST_RCVD")
               all_qsos.append({"call": call, "date": date, "time": time, "band": band, "mode": mode})
               cu = call.upper()
               if cu not in index:
                   index[cu] = []
-              index[cu].append([date, band, mode])
+              index[cu].append([date, band, mode, rst_s, rst_r])
               if dxcc:
                   dxcc_set.add(dxcc)
 

@@ -15,24 +15,30 @@ if (strlen($date) === 8)
 $time_fmt = '';
 if (strlen($time) >= 4) $time_fmt = substr($time,0,2).':'.substr($time,2,2).' UTC';
 
+$rst_s_raw = htmlspecialchars($_GET['rst_s'] ?? '', ENT_XML1);
+$rst_r_raw = htmlspecialchars($_GET['rst_r'] ?? '', ENT_XML1);
+
 $rst_ft = ['FT8','FT4','FT2','WSPR','JS8','MSK144'];
 $rst_cw = ['CW'];
-if (in_array($mode, $rst_ft))      $rst = '-10 dB';
-elseif (in_array($mode, $rst_cw))  $rst = '599';
-else                                $rst = '59';
+$rst_def = in_array($mode, $rst_ft) ? '-10 dB' : (in_array($mode, $rst_cw) ? '599' : '59');
+
+$rst_s = $rst_s_raw ?: $rst_def;
+$rst_r = $rst_r_raw ?: $rst_def;
 
 $call_size = strlen($call) > 8 ? 42 : (strlen($call) > 6 ? 52 : 62);
 
 $fields = [
-    ['DATE', $date_fmt ?: '—'],
-    ['BAND', $band ?: '—'],
-    ['MODE', $mode ?: '—'],
-    ['RST',  $rst],
+    ['DATE',     $date_fmt ?: '—'],
+    ['BAND',     $band ?: '—'],
+    ['MODE',     $mode ?: '—'],
+    ['RST SENT', $rst_s],
+    ['RST RCVD', $rst_r],
 ];
 if ($time_fmt) array_splice($fields, 1, 0, [['TIME', $time_fmt]]);
 $count   = count($fields);
-$box_w   = 100;
-$total_w = $count * $box_w + ($count - 1) * 12;
+$box_w   = $count >= 5 ? 88 : 100;
+$gap     = $count >= 5 ? 10 : 12;
+$total_w = $count * $box_w + ($count - 1) * $gap;
 $start_x = (590 - $total_w) / 2;
 
 $filename = 'QSL-OE8YML-' . $call . ($date ? '-'.$date : '') . '.svg';
@@ -63,7 +69,7 @@ ob_start(); ?>
   <text x="295" y="<?= 48 + 20 + $call_size ?>" text-anchor="middle" font-family="'Courier New',monospace" font-size="<?= $call_size ?>" font-weight="bold" fill="#3b82f6" letter-spacing="6"><?= $call ?></text>
   <rect x="40" y="155" width="510" height="1" fill="#334155"/>
   <?php foreach ($fields as $i => $f):
-      $bx = $start_x + $i * ($box_w + 12); ?>
+      $bx = $start_x + $i * ($box_w + $gap); ?>
   <rect x="<?= $bx ?>" y="170" width="<?= $box_w ?>" height="64" fill="#0f172a" rx="6" stroke="#334155" stroke-width="1"/>
   <text x="<?= $bx + $box_w/2 ?>" y="191" text-anchor="middle" font-family="'Courier New',monospace" font-size="9.5" fill="#475569" letter-spacing="2"><?= $f[0] ?></text>
   <text x="<?= $bx + $box_w/2 ?>" y="218" text-anchor="middle" font-family="'Courier New',monospace" font-size="17" font-weight="bold" fill="#f1f5f9"><?= $f[1] ?></text>
