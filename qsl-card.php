@@ -77,9 +77,8 @@ ob_start(); ?>
   <rect x="40" y="252" width="510" height="1" fill="#1e293b"/>
   <text x="295" y="272" text-anchor="middle" font-family="'Courier New',monospace" font-size="11" fill="#475569" letter-spacing="4">73 DE</text>
   <text x="295" y="312" text-anchor="middle" font-family="'Courier New',monospace" font-size="40" font-weight="bold" fill="#f1f5f9" letter-spacing="8">OE8YML</text>
-  <image href="https://achildrenmile.github.io/qrzprofiles/oe8yml-sig.png" x="137" y="303" width="256" height="56" preserveAspectRatio="xMidYMid meet"/>
+  <image href="https://achildrenmile.github.io/qrzprofiles/oe8yml-sig.png" x="187" y="313" width="180" height="40" preserveAspectRatio="xMidYMid meet"/>
   <text x="295" y="373" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#475569">Michael · JN66TO · Carinthia, Austria</text>
-  <rect x="6" y="387" width="578" height="17" fill="#0f172a"/>
   <text x="295" y="399" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#334155" letter-spacing="1">QSL · wavelog.oeradio.at · oeradio.at</text>
 </svg>
 <?php
