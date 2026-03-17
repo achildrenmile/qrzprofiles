@@ -180,7 +180,8 @@ jobs:
               f.write(idx_json)
           print(f"Generated docs/wavelog-index.json ({len(idx_json.encode()):,} bytes, {len(index):,} unique calls)")
 
-          # Last 10 QSOs for widget display
+          # Last 10 QSOs for widget display — sort by date+time first
+          all_qsos.sort(key=lambda x: x['date'] + x['time'])
           recent = list(reversed(all_qsos[-10:]))
 
           # Write stats JSON (for PHP logsearch page header)
