@@ -24,7 +24,7 @@ $stations = [
         'station_id' => 12,
         'call'       => 'OE8JOTA',
         'op'         => 'Pfadfindergruppe Porcia',
-        'loc'        => 'JN66TO',
+        'loc'        => 'JN66RS',
         'desc'       => 'Carinthia, Austria',
         'sig'        => '',
         'map'        => '',
@@ -32,6 +32,7 @@ $stations = [
         'stats_url'  => 'https://achildrenmile.github.io/qrzprofiles/wavelog-stats-oe8jota.json',
         'index_cache'=> 'oe8jota_wavelog_index.json',
         'stats_cache'=> 'oe8jota_wavelog_stats.json',
+        'theme'      => 'light',
     ],
 ];
 
@@ -96,8 +97,25 @@ function fmt_time($t) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Log Search &mdash; <?= htmlspecialchars($st['call']) ?></title>
+<?php $light = ($st['theme'] ?? '') === 'light'; ?>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+<?php if ($light): ?>
+body{font-family:system-ui,-apple-system,sans-serif;background:#fafafa;color:#2d2d2d;padding:0.75rem;font-size:0.85rem}
+.card{background:#fff;border:1px solid #ece6f0;border-radius:8px;overflow:hidden;margin-bottom:0.75rem}
+.ch{padding:.35rem .6rem;background:#f3e8f7;font-size:.68rem;font-weight:600;color:#7b2d8e;letter-spacing:.05em;text-transform:uppercase}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:.3rem .5rem;color:#9a6aaa;font-size:.68rem;font-weight:500;border-bottom:1px solid #ece6f0;text-transform:uppercase;letter-spacing:.05em}
+td{padding:.3rem .5rem;font-size:.8rem;border-bottom:1px solid #f5f0f8}
+td:first-child{color:#2d2d2d;font-weight:700;font-family:'Courier New',monospace}
+td:not(:first-child){color:#6a6a6a}
+.sr{display:flex;gap:8px;margin-bottom:0.5rem}
+input[name=call]{flex:1;background:#fff;border:1px solid #d4bde0;border-radius:8px;padding:8px 12px;color:#2d2d2d;font-size:0.85rem;outline:none}
+button{background:#7b2d8e;border:none;border-radius:8px;padding:8px 16px;color:#fff;font-weight:600;cursor:pointer;white-space:nowrap}
+.st{color:#9a6aaa;font-size:0.7rem;margin-bottom:0.5rem}
+.upd{text-align:right;color:#c4aed0;font-size:0.65rem;margin-top:0.3rem}
+a{color:#7b2d8e}
+<?php else: ?>
 body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;padding:0.75rem;font-size:0.85rem}
 .card{background:#1e293b;border:1px solid #334155;border-radius:8px;overflow:hidden;margin-bottom:0.75rem}
 .ch{padding:.35rem .6rem;background:#1a2744;font-size:.68rem;font-weight:600;color:#94a3b8;letter-spacing:.05em;text-transform:uppercase}
@@ -111,6 +129,7 @@ input[name=call]{flex:1;background:#1e293b;border:1px solid #334155;border-radiu
 button{background:#3b82f6;border:none;border-radius:8px;padding:8px 16px;color:#fff;font-weight:600;cursor:pointer;white-space:nowrap}
 .st{color:#64748b;font-size:0.7rem;margin-bottom:0.5rem}
 .upd{text-align:right;color:#334155;font-size:0.65rem;margin-top:0.3rem}
+<?php endif; ?>
 </style>
 </head>
 <body>
