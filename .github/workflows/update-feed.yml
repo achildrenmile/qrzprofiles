@@ -321,6 +321,81 @@ jobs:
           print(f"Generated OE8JOTA index ({len(index):,} unique calls, total={total}, dxcc={len(dxcc_set)})")
           PYEOF
 
+      - name: Generate OE8JOTA QSO map
+        env:
+          WAVELOG_API_KEY: ${{ secrets.WAVELOG_API_KEY_JOTA }}
+        run: |
+          pip install matplotlib cartopy --quiet
+          python3 << 'PYEOF'
+          import json, re, os
+          import urllib.request
+          import matplotlib
+          matplotlib.use('Agg')
+          import matplotlib.pyplot as plt
+          import cartopy.crs as ccrs
+          import cartopy.feature as cfeature
+
+          def adif_field(record, tag):
+              m = re.search(rf'<{tag}:\d+>([^\r\n<]+)', record, re.IGNORECASE)
+              return m.group(1).strip() if m else ""
+
+          def grid_to_latlon(grid):
+              grid = grid.upper().strip()
+              if len(grid) < 4: return None, None
+              try:
+                  lon = (ord(grid[0]) - ord('A')) * 20 - 180
+                  lat = (ord(grid[1]) - ord('A')) * 10 - 90
+                  lon += int(grid[2]) * 2
+                  lat += int(grid[3]) * 1
+                  if len(grid) >= 6:
+                      lon += (ord(grid[4]) - ord('A') + 0.5) * 2 / 24
+                      lat += (ord(grid[5]) - ord('A') + 0.5) / 24
+                  else:
+                      lon += 1.0; lat += 0.5
+                  return lat, lon
+              except: return None, None
+
+          API_KEY = os.environ.get("WAVELOG_API_KEY", "")
+          BASE_URL = "https://wavelog.oeradio.at/index.php/api"
+          body = json.dumps({"key": API_KEY, "station_id": 12, "fetchfromid": 0, "limit": 25000}).encode()
+          req = urllib.request.Request(f"{BASE_URL}/get_contacts_adif", data=body,
+              headers={"Content-Type": "application/json", "User-Agent": "QSO-Map-Bot"})
+          with urllib.request.urlopen(req, timeout=60) as r:
+              adif = json.loads(r.read()).get("adif", "")
+
+          lats, lons, seen = [], [], set()
+          for rec in adif.split("<EOR>"):
+              grid = adif_field(rec, "GRIDSQUARE")
+              if not grid or grid in seen: continue
+              seen.add(grid)
+              lat, lon = grid_to_latlon(grid)
+              if lat is not None and -90 <= lat <= 90 and -180 <= lon <= 180:
+                  lats.append(lat); lons.append(lon)
+
+          print(f"OE8JOTA: plotting {len(lats)} unique gridsquare locations")
+
+          home_lat, home_lon = grid_to_latlon("JN66RS")
+          fig = plt.figure(figsize=(14, 7), facecolor='#050d1a')
+          ax = fig.add_subplot(1, 1, 1, projection=ccrs.PlateCarree())
+          ax.set_global(); ax.set_facecolor('#050d1a')
+          ax.add_feature(cfeature.OCEAN.with_scale('110m'), facecolor='#050d1a', zorder=0)
+          ax.add_feature(cfeature.LAND.with_scale('110m'),  facecolor='#0f2336', zorder=1)
+          ax.add_feature(cfeature.COASTLINE.with_scale('110m'), edgecolor='#2a5a8a', linewidth=0.6, zorder=2)
+          ax.add_feature(cfeature.LAKES.with_scale('110m'),  facecolor='#050d1a', zorder=2)
+          kw = dict(transform=ccrs.PlateCarree(), linewidths=0)
+          if lats:
+              ax.scatter(lons, lats, s=40, c='#38bdf8', alpha=0.04, zorder=3, **kw)
+              ax.scatter(lons, lats, s=12, c='#38bdf8', alpha=0.15, zorder=4, **kw)
+              ax.scatter(lons, lats, s=4,  c='#7dd3fc', alpha=0.70, zorder=5, **kw)
+          ax.scatter([home_lon], [home_lat], s=220, c='#f59e0b', alpha=0.20, transform=ccrs.PlateCarree(), zorder=6, linewidths=0)
+          ax.scatter([home_lon], [home_lat], s=70,  c='#fbbf24', transform=ccrs.PlateCarree(), zorder=7, linewidths=0)
+          ax.spines['geo'].set_visible(False)
+          plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
+          plt.savefig('docs/qso-map-oe8jota.png', dpi=140, bbox_inches='tight', facecolor='#050d1a', pad_inches=0.04)
+          plt.close()
+          print("Generated docs/qso-map-oe8jota.png")
+          PYEOF
+
       - name: Extract signature from QSL card
         run: |
           pip install Pillow --quiet
@@ -452,7 +527,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/feed-widget.html docs/wavelog-widget.html docs/wavelog-index.json docs/wavelog-stats.json docs/wavelog-index-oe8jota.json docs/wavelog-stats-oe8jota.json docs/qso-map.png docs/oe8yml-sig.png
+          git add docs/feed-widget.html docs/wavelog-widget.html docs/wavelog-index.json docs/wavelog-stats.json docs/wavelog-index-oe8jota.json docs/wavelog-stats-oe8jota.json docs/qso-map.png docs/qso-map-oe8jota.png docs/oe8yml-sig.png
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else

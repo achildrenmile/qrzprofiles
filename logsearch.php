@@ -27,7 +27,7 @@ $stations = [
         'loc'        => 'JN66RS',
         'desc'       => 'Carinthia, Austria',
         'sig'        => '',
-        'map'        => '',
+        'map'        => 'https://achildrenmile.github.io/qrzprofiles/qso-map-oe8jota.png',
         'index_url'  => 'https://achildrenmile.github.io/qrzprofiles/wavelog-index-oe8jota.json',
         'stats_url'  => 'https://achildrenmile.github.io/qrzprofiles/wavelog-stats-oe8jota.json',
         'index_cache'=> 'oe8jota_wavelog_index.json',
@@ -148,9 +148,9 @@ button{background:#3b82f6;border:none;border-radius:8px;padding:8px 16px;color:#
 <thead><tr><th>Datum</th><th>UTC</th><th>Call</th><th>Band</th><th>Mode</th></tr></thead>
 <tbody>
 <?php foreach (($stats['recent'] ?? []) as $i => $q2):
-    $bg = ($i % 2 === 0) ? ' style="background:#172032"' : '';
+    $bg = ($i % 2 === 0) ? ($light ? ' style="background:#f5f0fb"' : ' style="background:#172032"') : '';
 ?>
-<tr<?= $bg ?>><td style="font-family:inherit;color:#94a3b8;font-weight:400"><?= fmt_date($q2['d']) ?></td><td><?= fmt_time($q2['t']) ?></td><td><?= htmlspecialchars($q2['c']) ?></td><td><?= htmlspecialchars($q2['b']) ?></td><td><?= htmlspecialchars($q2['m']) ?></td></tr>
+<tr<?= $bg ?>><td style="font-family:inherit;<?= $light ? 'color:#7b2d8e' : 'color:#94a3b8' ?>;font-weight:400"><?= fmt_date($q2['d']) ?></td><td><?= fmt_time($q2['t']) ?></td><td><?= htmlspecialchars($q2['c']) ?></td><td><?= htmlspecialchars($q2['b']) ?></td><td><?= htmlspecialchars($q2['m']) ?></td></tr>
 <?php endforeach; ?>
 </tbody>
 </table>
