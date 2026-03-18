@@ -237,7 +237,7 @@ jobs:
 
       - name: Generate OE8JOTA search index
         env:
-          WAVELOG_API_KEY: ${{ secrets.WAVELOG_API_KEY }}
+          WAVELOG_API_KEY: ${{ secrets.WAVELOG_API_KEY_JOTA }}
         run: |
           python3 << 'PYEOF'
           import urllib.request, json, re, os
