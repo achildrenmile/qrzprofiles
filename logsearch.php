@@ -189,5 +189,8 @@ button{background:#3b82f6;border:none;border-radius:8px;padding:8px 16px;color:#
 </div>
 <?php endif; ?>
 </div>
+<div class="upd" style="margin-top:0.75rem">
+  Powered by <a href="https://wavelog.oeradio.at">Wavelog · OERadio.at</a> &bull; <a href="https://github.com/achildrenmile">achildrenmile @ GitHub</a>
+</div>
 </body>
 </html>
