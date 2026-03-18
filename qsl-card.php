@@ -3,18 +3,20 @@
 
 $stations = [
     'oe8yml' => [
-        'call' => 'OE8YML',
-        'op'   => 'Michael',
-        'loc'  => 'JN66TO',
-        'desc' => 'Carinthia, Austria',
-        'sig'  => 'https://achildrenmile.github.io/qrzprofiles/oe8yml-sig.png',
+        'call'  => 'OE8YML',
+        'op'    => 'Michael',
+        'loc'   => 'JN66TO',
+        'desc'  => 'Carinthia, Austria',
+        'sig'   => 'https://achildrenmile.github.io/qrzprofiles/oe8yml-sig.png',
+        'photo' => 'https://oeradio.at/wp-content/uploads/2025/06/oe8yml_Michael_png_orig.jpg',
     ],
     'oe8jota' => [
-        'call' => 'OE8JOTA',
-        'op'   => 'Pfadfindergruppe Porcia',
-        'loc'  => 'JN66TO',
-        'desc' => 'Carinthia, Austria',
-        'sig'  => '',
+        'call'  => 'OE8JOTA',
+        'op'    => 'Pfadfindergruppe Porcia',
+        'loc'   => 'JN66RS',
+        'desc'  => 'Carinthia, Austria',
+        'sig'   => '',
+        'photo' => '',
     ],
 ];
 
@@ -98,6 +100,11 @@ ob_start(); ?>
   <?php endforeach; ?>
   <rect x="40" y="252" width="510" height="1" fill="#1e293b"/>
 <?php if ($st['sig']): ?>
+  <?php if ($st['photo']): ?>
+  <clipPath id="pc"><rect x="46" y="262" width="88" height="110" rx="6"/></clipPath>
+  <image href="<?= htmlspecialchars($st['photo'], ENT_XML1) ?>" x="46" y="262" width="88" height="110" preserveAspectRatio="xMidYMid slice" clip-path="url(#pc)"/>
+  <rect x="46" y="262" width="88" height="110" fill="none" stroke="#334155" stroke-width="1" rx="6"/>
+  <?php endif; ?>
   <text x="295" y="272" text-anchor="middle" font-family="'Courier New',monospace" font-size="11" fill="#475569" letter-spacing="4">73 DE</text>
   <text x="295" y="312" text-anchor="middle" font-family="'Courier New',monospace" font-size="40" font-weight="bold" fill="#f1f5f9" letter-spacing="8"><?= htmlspecialchars($st['call'], ENT_XML1) ?></text>
   <image href="<?= htmlspecialchars($st['sig'], ENT_XML1) ?>" x="187" y="313" width="180" height="40" preserveAspectRatio="xMidYMid meet"/>
