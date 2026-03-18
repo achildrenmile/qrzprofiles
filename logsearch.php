@@ -1,20 +1,50 @@
 <?php
-// OE8YML Log Search — server-side, no JS required
+// OE8YML/OE8JOTA Log Search — multi-tenant, server-side, no JS required
 // Place at https://oeradio.at/logsearch.php
 
 header('Content-Type: text/html; charset=UTF-8');
 header('X-Frame-Options: ALLOWALL');
 header('Access-Control-Allow-Origin: *');
 
-define('INDEX_URL', 'https://achildrenmile.github.io/qrzprofiles/wavelog-index.json');
-define('STATS_URL',  'https://achildrenmile.github.io/qrzprofiles/wavelog-stats.json');
-define('INDEX_CACHE', sys_get_temp_dir() . '/oe8yml_wavelog_index.json');
-define('STATS_CACHE',  sys_get_temp_dir() . '/oe8yml_wavelog_stats.json');
+$stations = [
+    'oe8yml' => [
+        'station_id' => 1,
+        'call'       => 'OE8YML',
+        'op'         => 'Michael',
+        'loc'        => 'JN66TO',
+        'desc'       => 'Carinthia, Austria',
+        'sig'        => 'https://achildrenmile.github.io/qrzprofiles/oe8yml-sig.png',
+        'map'        => 'https://achildrenmile.github.io/qrzprofiles/qso-map.png',
+        'index_url'  => 'https://achildrenmile.github.io/qrzprofiles/wavelog-index.json',
+        'stats_url'  => 'https://achildrenmile.github.io/qrzprofiles/wavelog-stats.json',
+        'index_cache'=> 'oe8yml_wavelog_index.json',
+        'stats_cache'=> 'oe8yml_wavelog_stats.json',
+    ],
+    'oe8jota' => [
+        'station_id' => 12,
+        'call'       => 'OE8JOTA',
+        'op'         => 'Pfadfindergruppe Porcia',
+        'loc'        => 'JN66TO',
+        'desc'       => 'Carinthia, Austria',
+        'sig'        => '',
+        'map'        => '',
+        'index_url'  => 'https://achildrenmile.github.io/qrzprofiles/wavelog-index-oe8jota.json',
+        'stats_url'  => 'https://achildrenmile.github.io/qrzprofiles/wavelog-stats-oe8jota.json',
+        'index_cache'=> 'oe8jota_wavelog_index.json',
+        'stats_cache'=> 'oe8jota_wavelog_stats.json',
+    ],
+];
+
+$s_param = isset($_GET['s']) ? strtolower(trim($_GET['s'])) : 'oe8yml';
+if (!array_key_exists($s_param, $stations)) $s_param = 'oe8yml';
+$st = $stations[$s_param];
+
 define('CACHE_TTL', 1800);
 
 function fetch_cached($url, $cache_file) {
-    if (file_exists($cache_file) && (time() - filemtime($cache_file)) < CACHE_TTL) {
-        $data = file_get_contents($cache_file);
+    $cache_path = sys_get_temp_dir() . '/' . $cache_file;
+    if (file_exists($cache_path) && (time() - filemtime($cache_path)) < CACHE_TTL) {
+        $data = file_get_contents($cache_path);
         if ($data) return json_decode($data, true);
     }
     $ctx = stream_context_create(['http' => [
@@ -23,7 +53,7 @@ function fetch_cached($url, $cache_file) {
     ]]);
     $data = @file_get_contents($url, false, $ctx);
     if ($data) {
-        file_put_contents($cache_file, $data);
+        file_put_contents($cache_path, $data);
         return json_decode($data, true);
     }
     return null;
@@ -33,13 +63,13 @@ $q = isset($_GET['call']) ? strtoupper(trim($_GET['call'])) : '';
 $q = preg_replace('/[^A-Z0-9\/]/', '', $q);
 
 // Always load stats for header
-$stats = fetch_cached(STATS_URL, STATS_CACHE);
+$stats = fetch_cached($st['stats_url'], $st['stats_cache']);
 
 $results = [];
 $error = '';
 
 if ($q !== '') {
-    $idx = fetch_cached(INDEX_URL, INDEX_CACHE);
+    $idx = fetch_cached($st['index_url'], $st['index_cache']);
     if ($idx === null) {
         $error = 'Index nicht verfügbar.';
     } else {
@@ -65,7 +95,7 @@ function fmt_time($t) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Log Search — OE8YML</title>
+<title>Log Search &mdash; <?= htmlspecialchars($st['call']) ?></title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;padding:0.75rem;font-size:0.85rem}
@@ -85,10 +115,12 @@ button{background:#3b82f6;border:none;border-radius:8px;padding:8px 16px;color:#
 </head>
 <body>
 
+<?php if ($st['map']): ?>
 <div class="card" style="margin-bottom:0.75rem">
-<div class="ch">QSO Map &mdash; OE8YML</div>
-<img src="https://achildrenmile.github.io/qrzprofiles/qso-map.png" style="width:100%;display:block">
+<div class="ch">QSO Map &mdash; <?= htmlspecialchars($st['call']) ?></div>
+<img src="<?= htmlspecialchars($st['map']) ?>" style="width:100%;display:block">
 </div>
+<?php endif; ?>
 
 <?php if ($stats): ?>
 <div class="card">
@@ -109,6 +141,7 @@ button{background:#3b82f6;border:none;border-radius:8px;padding:8px 16px;color:#
 
 <div style="margin-top:0.75rem">
 <form class="sr" method="get" action="">
+  <input type="hidden" name="s" value="<?= htmlspecialchars($s_param) ?>">
   <input name="call" type="text" placeholder="Callsign suchen..." value="<?= htmlspecialchars($q) ?>" autocomplete="off" spellcheck="false" autofocus>
   <button type="submit">Suchen</button>
 </form>
@@ -128,7 +161,7 @@ button{background:#3b82f6;border:none;border-radius:8px;padding:8px 16px;color:#
 <tbody>
 <?php foreach ($results as $call => $qsos): ?>
 <?php foreach ($qsos as $e): ?>
-<?php $qsl = 'https://oeradio.at/qsl-card.php?call='.urlencode($call).'&date='.urlencode($e[0]).'&band='.urlencode($e[1]).'&mode='.urlencode($e[2]).'&rst_s='.urlencode($e[3] ?? '').'&rst_r='.urlencode($e[4] ?? ''); ?>
+<?php $qsl = 'https://oeradio.at/qsl-card.php?s='.urlencode($s_param).'&call='.urlencode($call).'&date='.urlencode($e[0]).'&band='.urlencode($e[1]).'&mode='.urlencode($e[2]).'&rst_s='.urlencode($e[3] ?? '').'&rst_r='.urlencode($e[4] ?? ''); ?>
 <tr><td><?= htmlspecialchars($call) ?></td><td><?= fmt_date($e[0]) ?></td><td><?= htmlspecialchars($e[1]) ?></td><td><?= htmlspecialchars($e[2]) ?></td><td><a href="<?= $qsl ?>" target="_blank" style="color:#3b82f6;font-size:.68rem;border:1px solid #1e3a5f;padding:2px 7px;border-radius:4px;white-space:nowrap;text-decoration:none">QSL ↓</a></td></tr>
 <?php endforeach; ?>
 <?php endforeach; ?>

@@ -1,5 +1,27 @@
 <?php
-// OE8YML QSL Card — HTML page with embedded SVG + download button
+// OE8YML/OE8JOTA QSL Card — multi-tenant, HTML page with embedded SVG + download button
+
+$stations = [
+    'oe8yml' => [
+        'call' => 'OE8YML',
+        'op'   => 'Michael',
+        'loc'  => 'JN66TO',
+        'desc' => 'Carinthia, Austria',
+        'sig'  => 'https://achildrenmile.github.io/qrzprofiles/oe8yml-sig.png',
+    ],
+    'oe8jota' => [
+        'call' => 'OE8JOTA',
+        'op'   => 'Pfadfindergruppe Porcia',
+        'loc'  => 'JN66TO',
+        'desc' => 'Carinthia, Austria',
+        'sig'  => '',
+    ],
+];
+
+$s_param = isset($_GET['s']) ? strtolower(trim($_GET['s'])) : 'oe8yml';
+if (!array_key_exists($s_param, $stations)) $s_param = 'oe8yml';
+$st = $stations[$s_param];
+
 $call  = strtoupper(preg_replace('/[^A-Z0-9\/]/', '', $_GET['call'] ?? ''));
 $date  = preg_replace('/[^0-9]/', '', $_GET['date'] ?? '');
 $band  = htmlspecialchars(strtolower($_GET['band'] ?? ''), ENT_XML1);
@@ -41,7 +63,7 @@ $gap     = $count >= 5 ? 10 : 12;
 $total_w = $count * $box_w + ($count - 1) * $gap;
 $start_x = (590 - $total_w) / 2;
 
-$filename = 'QSL-OE8YML-' . $call . ($date ? '-'.$date : '') . '.svg';
+$filename = 'QSL-' . $st['call'] . '-' . $call . ($date ? '-'.$date : '') . '.svg';
 
 // Build SVG string
 ob_start(); ?>
@@ -75,10 +97,17 @@ ob_start(); ?>
   <text x="<?= $bx + $box_w/2 ?>" y="218" text-anchor="middle" font-family="'Courier New',monospace" font-size="17" font-weight="bold" fill="#f1f5f9"><?= $f[1] ?></text>
   <?php endforeach; ?>
   <rect x="40" y="252" width="510" height="1" fill="#1e293b"/>
+<?php if ($st['sig']): ?>
   <text x="295" y="272" text-anchor="middle" font-family="'Courier New',monospace" font-size="11" fill="#475569" letter-spacing="4">73 DE</text>
-  <text x="295" y="312" text-anchor="middle" font-family="'Courier New',monospace" font-size="40" font-weight="bold" fill="#f1f5f9" letter-spacing="8">OE8YML</text>
-  <image href="https://achildrenmile.github.io/qrzprofiles/oe8yml-sig.png" x="187" y="313" width="180" height="40" preserveAspectRatio="xMidYMid meet"/>
-  <text x="295" y="373" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#475569">Michael · JN66TO · Carinthia, Austria</text>
+  <text x="295" y="312" text-anchor="middle" font-family="'Courier New',monospace" font-size="40" font-weight="bold" fill="#f1f5f9" letter-spacing="8"><?= htmlspecialchars($st['call'], ENT_XML1) ?></text>
+  <image href="<?= htmlspecialchars($st['sig'], ENT_XML1) ?>" x="187" y="313" width="180" height="40" preserveAspectRatio="xMidYMid meet"/>
+  <text x="295" y="373" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#475569"><?= htmlspecialchars($st['op'], ENT_XML1) ?> · <?= htmlspecialchars($st['loc'], ENT_XML1) ?> · <?= htmlspecialchars($st['desc'], ENT_XML1) ?></text>
+<?php else: ?>
+  <text x="295" y="272" text-anchor="middle" font-family="'Courier New',monospace" font-size="11" fill="#475569" letter-spacing="4">73 DE</text>
+  <text x="295" y="318" text-anchor="middle" font-family="'Courier New',monospace" font-size="36" font-weight="bold" fill="#f1f5f9" letter-spacing="8"><?= htmlspecialchars($st['call'], ENT_XML1) ?></text>
+  <text x="295" y="350" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#475569"><?= htmlspecialchars($st['op'], ENT_XML1) ?> · <?= htmlspecialchars($st['loc'], ENT_XML1) ?></text>
+  <text x="295" y="370" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#475569"><?= htmlspecialchars($st['desc'], ENT_XML1) ?></text>
+<?php endif; ?>
   <text x="295" y="399" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#334155" letter-spacing="1">QSL · wavelog.oeradio.at · oeradio.at</text>
 </svg>
 <?php
@@ -91,7 +120,7 @@ header('Cache-Control: no-store');
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>QSL — OE8YML / <?= htmlspecialchars($call) ?></title>
+<title>QSL &mdash; <?= htmlspecialchars($st['call']) ?> / <?= htmlspecialchars($call) ?></title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#0f172a;color:#f1f5f9;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:1.5rem;gap:1.2rem}
