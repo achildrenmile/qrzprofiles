@@ -23,6 +23,7 @@ $stations = [
 $s_param = isset($_GET['s']) ? strtolower(trim($_GET['s'])) : 'oe8yml';
 if (!array_key_exists($s_param, $stations)) $s_param = 'oe8yml';
 $st = $stations[$s_param];
+$light = ($s_param === 'oe8jota');
 
 $call  = strtoupper(preg_replace('/[^A-Z0-9\/]/', '', $_GET['call'] ?? ''));
 $date  = preg_replace('/[^0-9]/', '', $_GET['date'] ?? '');
@@ -42,8 +43,8 @@ if (strlen($time) >= 4) $time_fmt = substr($time,0,2).':'.substr($time,2,2).' UT
 $rst_s_raw = htmlspecialchars($_GET['rst_s'] ?? '', ENT_XML1);
 $rst_r_raw = htmlspecialchars($_GET['rst_r'] ?? '', ENT_XML1);
 
-$rst_ft = ['FT8','FT4','FT2','WSPR','JS8','MSK144'];
-$rst_cw = ['CW'];
+$rst_ft  = ['FT8','FT4','FT2','WSPR','JS8','MSK144'];
+$rst_cw  = ['CW'];
 $rst_def = in_array($mode, $rst_ft) ? '-10 dB' : (in_array($mode, $rst_cw) ? '599' : '59');
 
 $rst_s = $rst_s_raw ?: $rst_def;
@@ -67,55 +68,92 @@ $start_x = (590 - $total_w) / 2;
 
 $filename = 'QSL-' . $st['call'] . '-' . $call . ($date ? '-'.$date : '') . '.svg';
 
+// Color palette
+$c_bg1    = $light ? '#ffffff'  : '#1e293b';
+$c_bg2    = $light ? '#f3e8f7'  : '#0f172a';
+$c_border = $light ? '#d4bde0'  : '#334155';
+$c_acc    = $light ? '#7b2d8e'  : '#3b82f6';
+$c_sub    = $light ? '#9a6aaa'  : '#475569';
+$c_sep    = $light ? '#e8d5f0'  : '#334155';
+$c_box_bg = $light ? '#faf5fc'  : '#0f172a';
+$c_box_bd = $light ? '#dcc8eb'  : '#334155';
+$c_lbl    = $light ? '#9a6aaa'  : '#475569';
+$c_val    = $light ? '#3d1f52'  : '#f1f5f9';
+$c_footer = $light ? '#c4aed0'  : '#334155';
+$c_page   = $light ? '#fafafa'  : '#0f172a';
+$c_btn    = $light ? '#7b2d8e'  : '#3b82f6';
+$c_btn2bg = $light ? '#f3e8f7'  : '#1e293b';
+$c_btn2bd = $light ? '#d4bde0'  : '#334155';
+$c_btn2t  = $light ? '#7b2d8e'  : '#94a3b8';
+$c_hint   = $light ? '#9a6aaa'  : '#475569';
+
 // Build SVG string
 ob_start(); ?>
 <svg id="qsl" width="590" height="410" viewBox="0 0 590 410" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#1e293b"/><stop offset="100%" stop-color="#0f172a"/>
+      <stop offset="0%" stop-color="<?= $c_bg1 ?>"/><stop offset="100%" stop-color="<?= $c_bg2 ?>"/>
     </linearGradient>
     <linearGradient id="acc" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0"/>
-      <stop offset="50%" stop-color="#3b82f6" stop-opacity="0.6"/>
-      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+      <stop offset="0%" stop-color="<?= $c_acc ?>" stop-opacity="0"/>
+      <stop offset="50%" stop-color="<?= $c_acc ?>" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="<?= $c_acc ?>" stop-opacity="0"/>
     </linearGradient>
   </defs>
   <rect width="590" height="410" fill="url(#bg)" rx="10"/>
-  <rect x="6" y="6" width="578" height="398" fill="none" stroke="#334155" stroke-width="1.5" rx="8"/>
+  <rect x="6" y="6" width="578" height="398" fill="none" stroke="<?= $c_border ?>" stroke-width="1.5" rx="8"/>
   <rect x="6" y="6" width="578" height="3" fill="url(#acc)" rx="2"/>
-  <g opacity="0.07" stroke="#3b82f6" stroke-width="1.2" fill="none">
+  <g opacity="0.07" stroke="<?= $c_acc ?>" stroke-width="1.2" fill="none">
     <path d="M480,20 Q510,40 480,60 Q510,80 480,100"/>
     <path d="M500,15 Q535,40 500,65 Q535,90 500,115"/>
     <path d="M520,10 Q560,40 520,70 Q560,100 520,130"/>
     <path d="M540,5 Q585,40 540,75 Q585,110 540,145"/>
   </g>
-  <text x="295" y="48" text-anchor="middle" font-family="'Courier New',monospace" font-size="11" fill="#475569" letter-spacing="4">CONFIRMING QSO WITH</text>
-  <text x="295" y="<?= 48 + 20 + $call_size ?>" text-anchor="middle" font-family="'Courier New',monospace" font-size="<?= $call_size ?>" font-weight="bold" fill="#3b82f6" letter-spacing="6"><?= $call ?></text>
-  <rect x="40" y="155" width="510" height="1" fill="#334155"/>
+  <text x="295" y="48" text-anchor="middle" font-family="'Courier New',monospace" font-size="11" fill="<?= $c_sub ?>" letter-spacing="4">CONFIRMING QSO WITH</text>
+  <text x="295" y="<?= 48 + 20 + $call_size ?>" text-anchor="middle" font-family="'Courier New',monospace" font-size="<?= $call_size ?>" font-weight="bold" fill="<?= $c_acc ?>" letter-spacing="6"><?= $call ?></text>
+  <rect x="40" y="155" width="510" height="1" fill="<?= $c_sep ?>"/>
   <?php foreach ($fields as $i => $f):
       $bx = $start_x + $i * ($box_w + $gap); ?>
-  <rect x="<?= $bx ?>" y="170" width="<?= $box_w ?>" height="64" fill="#0f172a" rx="6" stroke="#334155" stroke-width="1"/>
-  <text x="<?= $bx + $box_w/2 ?>" y="191" text-anchor="middle" font-family="'Courier New',monospace" font-size="9.5" fill="#475569" letter-spacing="2"><?= $f[0] ?></text>
-  <text x="<?= $bx + $box_w/2 ?>" y="218" text-anchor="middle" font-family="'Courier New',monospace" font-size="17" font-weight="bold" fill="#f1f5f9"><?= $f[1] ?></text>
+  <rect x="<?= $bx ?>" y="170" width="<?= $box_w ?>" height="64" fill="<?= $c_box_bg ?>" rx="6" stroke="<?= $c_box_bd ?>" stroke-width="1"/>
+  <text x="<?= $bx + $box_w/2 ?>" y="191" text-anchor="middle" font-family="'Courier New',monospace" font-size="9.5" fill="<?= $c_lbl ?>" letter-spacing="2"><?= $f[0] ?></text>
+  <text x="<?= $bx + $box_w/2 ?>" y="218" text-anchor="middle" font-family="'Courier New',monospace" font-size="17" font-weight="bold" fill="<?= $c_val ?>"><?= $f[1] ?></text>
   <?php endforeach; ?>
-  <rect x="40" y="252" width="510" height="1" fill="#1e293b"/>
+  <rect x="40" y="252" width="510" height="1" fill="<?= $c_sep ?>"/>
 <?php if ($st['sig']): ?>
   <?php if ($st['photo']): ?>
   <clipPath id="pc"><rect x="46" y="262" width="88" height="110" rx="6"/></clipPath>
   <image href="<?= htmlspecialchars($st['photo'], ENT_XML1) ?>" x="46" y="262" width="88" height="110" preserveAspectRatio="xMidYMid slice" clip-path="url(#pc)"/>
-  <rect x="46" y="262" width="88" height="110" fill="none" stroke="#334155" stroke-width="1" rx="6"/>
+  <rect x="46" y="262" width="88" height="110" fill="none" stroke="<?= $c_border ?>" stroke-width="1" rx="6"/>
   <?php endif; ?>
-  <text x="295" y="272" text-anchor="middle" font-family="'Courier New',monospace" font-size="11" fill="#475569" letter-spacing="4">73 DE</text>
-  <text x="295" y="312" text-anchor="middle" font-family="'Courier New',monospace" font-size="40" font-weight="bold" fill="#f1f5f9" letter-spacing="8"><?= htmlspecialchars($st['call'], ENT_XML1) ?></text>
+  <text x="295" y="272" text-anchor="middle" font-family="'Courier New',monospace" font-size="11" fill="<?= $c_sub ?>" letter-spacing="4">73 DE</text>
+  <text x="295" y="312" text-anchor="middle" font-family="'Courier New',monospace" font-size="40" font-weight="bold" fill="<?= $c_val ?>" letter-spacing="8"><?= htmlspecialchars($st['call'], ENT_XML1) ?></text>
   <image href="<?= htmlspecialchars($st['sig'], ENT_XML1) ?>" x="187" y="313" width="180" height="40" preserveAspectRatio="xMidYMid meet"/>
-  <text x="295" y="373" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#475569"><?= htmlspecialchars($st['op'], ENT_XML1) ?> · <?= htmlspecialchars($st['loc'], ENT_XML1) ?> · <?= htmlspecialchars($st['desc'], ENT_XML1) ?></text>
+  <text x="295" y="373" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="<?= $c_sub ?>"><?= htmlspecialchars($st['op'], ENT_XML1) ?> · <?= htmlspecialchars($st['loc'], ENT_XML1) ?> · <?= htmlspecialchars($st['desc'], ENT_XML1) ?></text>
 <?php else: ?>
-  <text x="295" y="272" text-anchor="middle" font-family="'Courier New',monospace" font-size="11" fill="#475569" letter-spacing="4">73 DE</text>
-  <text x="295" y="318" text-anchor="middle" font-family="'Courier New',monospace" font-size="36" font-weight="bold" fill="#f1f5f9" letter-spacing="8"><?= htmlspecialchars($st['call'], ENT_XML1) ?></text>
-  <text x="295" y="350" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#475569"><?= htmlspecialchars($st['op'], ENT_XML1) ?> · <?= htmlspecialchars($st['loc'], ENT_XML1) ?></text>
-  <text x="295" y="370" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#475569"><?= htmlspecialchars($st['desc'], ENT_XML1) ?></text>
+  <!-- JOTA-JOTI badge -->
+  <rect x="46" y="262" width="84" height="118" rx="8" fill="<?= $light ? '#f3e8f7' : '#0f172a' ?>" stroke="<?= $c_box_bd ?>" stroke-width="1"/>
+  <!-- Antenna mast -->
+  <line x1="88" y1="278" x2="88" y2="300" stroke="<?= $c_acc ?>" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="88" y1="278" x2="78" y2="286" stroke="<?= $c_acc ?>" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="88" y1="278" x2="98" y2="286" stroke="<?= $c_acc ?>" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Signal arcs -->
+  <path d="M70,314 Q70,298 88,298 Q106,298 106,314" fill="none" stroke="<?= $c_acc ?>" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M76,314 Q76,303 88,303 Q100,303 100,314" fill="none" stroke="<?= $c_acc ?>" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M82,314 Q82,308 88,308 Q94,308 94,314" fill="none" stroke="<?= $c_acc ?>" stroke-width="1.4" stroke-linecap="round"/>
+  <circle cx="88" cy="314" r="2.5" fill="<?= $c_acc ?>"/>
+  <!-- JOTA·JOTI label -->
+  <text x="88" y="330" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" font-weight="700" fill="<?= $c_acc ?>" letter-spacing="0.5">JOTA · JOTI</text>
+  <text x="88" y="342" text-anchor="middle" font-family="system-ui,sans-serif" font-size="6.5" fill="<?= $c_sub ?>">Jamboree On The Air</text>
+  <text x="88" y="352" text-anchor="middle" font-family="system-ui,sans-serif" font-size="6.5" fill="<?= $c_sub ?>">On The Internet</text>
+  <rect x="62" y="359" width="52" height="14" rx="4" fill="<?= $c_acc ?>"/>
+  <text x="88" y="370" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8" font-weight="700" fill="#ffffff" letter-spacing="0.5">2024</text>
+  <!-- Right side text -->
+  <text x="355" y="281" text-anchor="middle" font-family="'Courier New',monospace" font-size="11" fill="<?= $c_sub ?>" letter-spacing="4">73 DE</text>
+  <text x="355" y="322" text-anchor="middle" font-family="'Courier New',monospace" font-size="34" font-weight="bold" fill="<?= $c_acc ?>" letter-spacing="6"><?= htmlspecialchars($st['call'], ENT_XML1) ?></text>
+  <text x="355" y="348" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="<?= $c_sub ?>"><?= htmlspecialchars($st['op'], ENT_XML1) ?> · <?= htmlspecialchars($st['loc'], ENT_XML1) ?></text>
+  <text x="355" y="368" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="<?= $c_sub ?>"><?= htmlspecialchars($st['desc'], ENT_XML1) ?></text>
 <?php endif; ?>
-  <text x="295" y="399" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#334155" letter-spacing="1">QSL · wavelog.oeradio.at · oeradio.at</text>
+  <text x="295" y="399" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="<?= $c_footer ?>" letter-spacing="1">QSL · wavelog.oeradio.at · oeradio.at</text>
 </svg>
 <?php
 $svg = trim(ob_get_clean());
@@ -130,12 +168,12 @@ header('Cache-Control: no-store');
 <title>QSL &mdash; <?= htmlspecialchars($st['call']) ?> / <?= htmlspecialchars($call) ?></title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#0f172a;color:#f1f5f9;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:1.5rem;gap:1.2rem}
-svg{max-width:100%;height:auto;border-radius:10px}
+body{background:<?= $c_page ?>;color:<?= $light ? '#2d2d2d' : '#f1f5f9' ?>;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:1.5rem;gap:1.2rem}
+svg{max-width:100%;height:auto;border-radius:10px;<?= $light ? 'box-shadow:0 4px 24px rgba(123,45,142,.12)' : '' ?>}
 .btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-button,a.btn{background:#3b82f6;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:.9rem;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
-a.btn.pr{background:#1e293b;border:1px solid #334155;color:#94a3b8}
-.hint{color:#475569;font-size:.75rem}
+button,a.btn{background:<?= $c_btn ?>;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:.9rem;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+a.btn.pr{background:<?= $c_btn2bg ?>;border:1px solid <?= $c_btn2bd ?>;color:<?= $c_btn2t ?>}
+.hint{color:<?= $c_hint ?>;font-size:.75rem}
 </style>
 </head>
 <body>
