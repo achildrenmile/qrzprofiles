@@ -130,23 +130,9 @@ ob_start(); ?>
   <image href="<?= htmlspecialchars($st['sig'], ENT_XML1) ?>" x="187" y="313" width="180" height="40" preserveAspectRatio="xMidYMid meet"/>
   <text x="295" y="373" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="<?= $c_sub ?>"><?= htmlspecialchars($st['op'], ENT_XML1) ?> · <?= htmlspecialchars($st['loc'], ENT_XML1) ?> · <?= htmlspecialchars($st['desc'], ENT_XML1) ?></text>
 <?php else: ?>
-  <!-- JOTA-JOTI badge -->
-  <rect x="46" y="262" width="84" height="118" rx="8" fill="<?= $light ? '#f3e8f7' : '#0f172a' ?>" stroke="<?= $c_box_bd ?>" stroke-width="1"/>
-  <!-- Antenna mast -->
-  <line x1="88" y1="278" x2="88" y2="300" stroke="<?= $c_acc ?>" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="88" y1="278" x2="78" y2="286" stroke="<?= $c_acc ?>" stroke-width="1.5" stroke-linecap="round"/>
-  <line x1="88" y1="278" x2="98" y2="286" stroke="<?= $c_acc ?>" stroke-width="1.5" stroke-linecap="round"/>
-  <!-- Signal arcs -->
-  <path d="M70,314 Q70,298 88,298 Q106,298 106,314" fill="none" stroke="<?= $c_acc ?>" stroke-width="2.2" stroke-linecap="round"/>
-  <path d="M76,314 Q76,303 88,303 Q100,303 100,314" fill="none" stroke="<?= $c_acc ?>" stroke-width="1.8" stroke-linecap="round"/>
-  <path d="M82,314 Q82,308 88,308 Q94,308 94,314" fill="none" stroke="<?= $c_acc ?>" stroke-width="1.4" stroke-linecap="round"/>
-  <circle cx="88" cy="314" r="2.5" fill="<?= $c_acc ?>"/>
-  <!-- JOTA·JOTI label -->
-  <text x="88" y="330" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" font-weight="700" fill="<?= $c_acc ?>" letter-spacing="0.5">JOTA · JOTI</text>
-  <text x="88" y="342" text-anchor="middle" font-family="system-ui,sans-serif" font-size="6.5" fill="<?= $c_sub ?>">Jamboree On The Air</text>
-  <text x="88" y="352" text-anchor="middle" font-family="system-ui,sans-serif" font-size="6.5" fill="<?= $c_sub ?>">On The Internet</text>
-  <rect x="62" y="359" width="52" height="14" rx="4" fill="<?= $c_acc ?>"/>
-  <text x="88" y="370" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8" font-weight="700" fill="#ffffff" letter-spacing="0.5">2024</text>
+  <!-- JOTA-JOTI logo -->
+  <clipPath id="jc"><rect x="46" y="267" width="100" height="100" rx="8"/></clipPath>
+  <image href="https://cdn-bio.qrz.com/a/oe8jota/JOTA_JOTI_logo.jpg?p=dccdc2ae899f8caa8ad0fb703ded547a" x="46" y="267" width="100" height="100" preserveAspectRatio="xMidYMid meet" clip-path="url(#jc)"/>
   <!-- Right side text -->
   <text x="355" y="281" text-anchor="middle" font-family="'Courier New',monospace" font-size="11" fill="<?= $c_sub ?>" letter-spacing="4">73 DE</text>
   <text x="355" y="322" text-anchor="middle" font-family="'Courier New',monospace" font-size="34" font-weight="bold" fill="<?= $c_acc ?>" letter-spacing="6"><?= htmlspecialchars($st['call'], ENT_XML1) ?></text>
