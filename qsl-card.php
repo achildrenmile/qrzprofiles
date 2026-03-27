@@ -18,12 +18,21 @@ $stations = [
         'sig'   => '',
         'photo' => '',
     ],
+    'oe8cni' => [
+        'call'  => 'OE8CNI',
+        'op'    => 'OE8CNI',
+        'loc'   => 'JN67',
+        'desc'  => 'Maria Rain, Kärnten',
+        'sig'   => '',
+        'photo' => '',
+    ],
 ];
 
 $s_param = isset($_GET['s']) ? strtolower(trim($_GET['s'])) : 'oe8yml';
 if (!array_key_exists($s_param, $stations)) $s_param = 'oe8yml';
 $st = $stations[$s_param];
-$light = ($s_param === 'oe8jota');
+$light  = ($s_param === 'oe8jota');
+$kaernt = ($s_param === 'oe8cni');
 
 $call  = strtoupper(preg_replace('/[^A-Z0-9\/]/', '', $_GET['call'] ?? ''));
 $date  = preg_replace('/[^0-9]/', '', $_GET['date'] ?? '');
@@ -69,23 +78,37 @@ $start_x = (590 - $total_w) / 2;
 $filename = 'QSL-' . $st['call'] . '-' . $call . ($date ? '-'.$date : '') . '.svg';
 
 // Color palette
-$c_bg1    = $light ? '#ffffff'  : '#1e293b';
-$c_bg2    = $light ? '#f3e8f7'  : '#0f172a';
-$c_border = $light ? '#d4bde0'  : '#334155';
-$c_acc    = $light ? '#7b2d8e'  : '#3b82f6';
-$c_sub    = $light ? '#9a6aaa'  : '#475569';
-$c_sep    = $light ? '#e8d5f0'  : '#334155';
-$c_box_bg = $light ? '#faf5fc'  : '#0f172a';
-$c_box_bd = $light ? '#dcc8eb'  : '#334155';
-$c_lbl    = $light ? '#9a6aaa'  : '#475569';
-$c_val    = $light ? '#3d1f52'  : '#f1f5f9';
-$c_footer = $light ? '#c4aed0'  : '#334155';
-$c_page   = $light ? '#fafafa'  : '#0f172a';
-$c_btn    = $light ? '#7b2d8e'  : '#3b82f6';
-$c_btn2bg = $light ? '#f3e8f7'  : '#1e293b';
-$c_btn2bd = $light ? '#d4bde0'  : '#334155';
-$c_btn2t  = $light ? '#7b2d8e'  : '#94a3b8';
-$c_hint   = $light ? '#9a6aaa'  : '#475569';
+if ($kaernt) {
+    $c_bg1    = '#ffffff'; $c_bg2    = '#f1f5f9';
+    $c_border = '#e2e8f0'; $c_acc    = '#1e40af';
+    $c_sub    = '#64748b'; $c_sep    = '#e2e8f0';
+    $c_box_bg = '#f8fafc'; $c_box_bd = '#e2e8f0';
+    $c_lbl    = '#64748b'; $c_val    = '#1e293b';
+    $c_footer = '#94a3b8'; $c_page   = '#fafafa';
+    $c_btn    = '#2563eb'; $c_btn2bg = '#f1f5f9';
+    $c_btn2bd = '#e2e8f0'; $c_btn2t  = '#2563eb';
+    $c_hint   = '#64748b';
+} elseif ($light) {
+    $c_bg1    = '#ffffff';  $c_bg2    = '#f3e8f7';
+    $c_border = '#d4bde0';  $c_acc    = '#7b2d8e';
+    $c_sub    = '#9a6aaa';  $c_sep    = '#e8d5f0';
+    $c_box_bg = '#faf5fc';  $c_box_bd = '#dcc8eb';
+    $c_lbl    = '#9a6aaa';  $c_val    = '#3d1f52';
+    $c_footer = '#c4aed0';  $c_page   = '#fafafa';
+    $c_btn    = '#7b2d8e';  $c_btn2bg = '#f3e8f7';
+    $c_btn2bd = '#d4bde0';  $c_btn2t  = '#7b2d8e';
+    $c_hint   = '#9a6aaa';
+} else {
+    $c_bg1    = '#1e293b';  $c_bg2    = '#0f172a';
+    $c_border = '#334155';  $c_acc    = '#3b82f6';
+    $c_sub    = '#475569';  $c_sep    = '#334155';
+    $c_box_bg = '#0f172a';  $c_box_bd = '#334155';
+    $c_lbl    = '#475569';  $c_val    = '#f1f5f9';
+    $c_footer = '#334155';  $c_page   = '#0f172a';
+    $c_btn    = '#3b82f6';  $c_btn2bg = '#1e293b';
+    $c_btn2bd = '#334155';  $c_btn2t  = '#94a3b8';
+    $c_hint   = '#475569';
+}
 
 // Build SVG string
 ob_start(); ?>
@@ -119,7 +142,12 @@ ob_start(); ?>
   <text x="<?= $bx + $box_w/2 ?>" y="218" text-anchor="middle" font-family="'Courier New',monospace" font-size="17" font-weight="bold" fill="<?= $c_val ?>"><?= $f[1] ?></text>
   <?php endforeach; ?>
   <rect x="40" y="252" width="510" height="1" fill="<?= $c_sep ?>"/>
-<?php if ($st['sig']): ?>
+<?php if ($kaernt): ?>
+  <!-- OE8CNI — centered, no photo -->
+  <text x="295" y="280" text-anchor="middle" font-family="'Courier New',monospace" font-size="11" fill="<?= $c_sub ?>" letter-spacing="4">73 DE</text>
+  <text x="295" y="325" text-anchor="middle" font-family="'Courier New',monospace" font-size="44" font-weight="bold" fill="<?= $c_acc ?>" letter-spacing="8"><?= htmlspecialchars($st['call'], ENT_XML1) ?></text>
+  <text x="295" y="360" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="<?= $c_sub ?>"><?= htmlspecialchars($st['loc'], ENT_XML1) ?> · <?= htmlspecialchars($st['desc'], ENT_XML1) ?></text>
+<?php elseif ($st['sig']): ?>
   <?php if ($st['photo']): ?>
   <clipPath id="pc"><rect x="46" y="262" width="88" height="110" rx="6"/></clipPath>
   <image href="<?= htmlspecialchars($st['photo'], ENT_XML1) ?>" x="46" y="262" width="88" height="110" preserveAspectRatio="xMidYMid slice" clip-path="url(#pc)"/>
@@ -133,7 +161,6 @@ ob_start(); ?>
   <!-- JOTA-JOTI logo -->
   <clipPath id="jc"><rect x="46" y="267" width="100" height="100" rx="8"/></clipPath>
   <image href="https://cdn-bio.qrz.com/a/oe8jota/JOTA_JOTI_logo.jpg?p=dccdc2ae899f8caa8ad0fb703ded547a" x="46" y="267" width="100" height="100" preserveAspectRatio="xMidYMid meet" clip-path="url(#jc)"/>
-  <!-- Right side text -->
   <text x="355" y="281" text-anchor="middle" font-family="'Courier New',monospace" font-size="11" fill="<?= $c_sub ?>" letter-spacing="4">73 DE</text>
   <text x="355" y="322" text-anchor="middle" font-family="'Courier New',monospace" font-size="34" font-weight="bold" fill="<?= $c_acc ?>" letter-spacing="6"><?= htmlspecialchars($st['call'], ENT_XML1) ?></text>
   <text x="355" y="348" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="<?= $c_sub ?>"><?= htmlspecialchars($st['op'], ENT_XML1) ?> · <?= htmlspecialchars($st['loc'], ENT_XML1) ?></text>
@@ -154,8 +181,8 @@ header('Cache-Control: no-store');
 <title>QSL &mdash; <?= htmlspecialchars($st['call']) ?> / <?= htmlspecialchars($call) ?></title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:<?= $c_page ?>;color:<?= $light ? '#2d2d2d' : '#f1f5f9' ?>;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:1.5rem;gap:1.2rem}
-svg{max-width:100%;height:auto;border-radius:10px;<?= $light ? 'box-shadow:0 4px 24px rgba(123,45,142,.12)' : '' ?>}
+body{background:<?= $c_page ?>;color:<?= ($light || $kaernt) ? '#2d2d2d' : '#fff1f2' ?>;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:1.5rem;gap:1.2rem}
+svg{max-width:100%;height:auto;border-radius:10px;<?= $light ? 'box-shadow:0 4px 24px rgba(123,45,142,.12)' : ($kaernt ? 'box-shadow:0 4px 24px rgba(30,64,175,.1)' : '') ?>}
 .btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 button,a.btn{background:<?= $c_btn ?>;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:.9rem;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
 a.btn.pr{background:<?= $c_btn2bg ?>;border:1px solid <?= $c_btn2bd ?>;color:<?= $c_btn2t ?>}

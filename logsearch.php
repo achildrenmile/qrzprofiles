@@ -34,6 +34,20 @@ $stations = [
         'stats_cache'=> 'oe8jota_wavelog_stats.json',
         'theme'      => 'light',
     ],
+    'oe8cni' => [
+        'station_id' => 14,
+        'call'       => 'OE8CNI',
+        'op'         => 'OE8CNI',
+        'loc'        => 'JN67',
+        'desc'       => 'Maria Rain, Carinthia',
+        'sig'        => '',
+        'map'        => 'https://achildrenmile.github.io/qrzprofiles/qso-map-oe8cni.png',
+        'index_url'  => 'https://achildrenmile.github.io/qrzprofiles/wavelog-index-oe8cni.json',
+        'stats_url'  => 'https://achildrenmile.github.io/qrzprofiles/wavelog-stats-oe8cni.json',
+        'index_cache'=> 'oe8cni_wavelog_index.json',
+        'stats_cache'=> 'oe8cni_wavelog_stats.json',
+        'theme'      => 'light',
+    ],
 ];
 
 $s_param = isset($_GET['s']) ? strtolower(trim($_GET['s'])) : 'oe8yml';
@@ -97,10 +111,25 @@ function fmt_time($t) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Log Search &mdash; <?= htmlspecialchars($st['call']) ?></title>
-<?php $light = ($st['theme'] ?? '') === 'light'; ?>
+<?php $theme = $st['theme'] ?? 'dark'; $light = ($theme === 'light'); ?>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-<?php if ($light): ?>
+<?php if ($theme === 'light' && $s_param === 'oe8cni'): ?>
+body{font-family:system-ui,-apple-system,sans-serif;background:#fafafa;color:#1a1a1a;padding:0.75rem;font-size:0.85rem}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:0.75rem}
+.ch{padding:.35rem .6rem;background:#eff6ff;font-size:.68rem;font-weight:600;color:#1e40af;letter-spacing:.05em;text-transform:uppercase}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:.3rem .5rem;color:#64748b;font-size:.68rem;font-weight:500;border-bottom:1px solid #e2e8f0;text-transform:uppercase;letter-spacing:.05em}
+td{padding:.3rem .5rem;font-size:.8rem;border-bottom:1px solid #f1f5f9}
+td:first-child{color:#1e293b;font-weight:700;font-family:'Courier New',monospace}
+td:not(:first-child){color:#475569}
+.sr{display:flex;gap:8px;margin-bottom:0.5rem}
+input[name=call]{flex:1;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:8px 12px;color:#1a1a1a;font-size:0.85rem;outline:none}
+button{background:#2563eb;border:none;border-radius:8px;padding:8px 16px;color:#fff;font-weight:600;cursor:pointer;white-space:nowrap}
+.st{color:#64748b;font-size:0.7rem;margin-bottom:0.5rem}
+.upd{text-align:right;color:#94a3b8;font-size:0.65rem;margin-top:0.3rem}
+a{color:#2563eb}
+<?php elseif ($light): ?>
 body{font-family:system-ui,-apple-system,sans-serif;background:#fafafa;color:#2d2d2d;padding:0.75rem;font-size:0.85rem}
 .card{background:#fff;border:1px solid #ece6f0;border-radius:8px;overflow:hidden;margin-bottom:0.75rem}
 .ch{padding:.35rem .6rem;background:#f3e8f7;font-size:.68rem;font-weight:600;color:#7b2d8e;letter-spacing:.05em;text-transform:uppercase}
@@ -148,9 +177,11 @@ button{background:#3b82f6;border:none;border-radius:8px;padding:8px 16px;color:#
 <thead><tr><th>Datum</th><th>UTC</th><th>Call</th><th>Band</th><th>Mode</th></tr></thead>
 <tbody>
 <?php foreach (($stats['recent'] ?? []) as $i => $q2):
-    $bg = ($i % 2 === 0) ? ($light ? ' style="background:#f5f0fb"' : ' style="background:#172032"') : '';
+    if ($theme === 'light' && $s_param === 'oe8cni') $bg = ($i % 2 === 0) ? ' style="background:#f1f5f9"' : '';
+    elseif ($light) $bg = ($i % 2 === 0) ? ' style="background:#f5f0fb"' : '';
+    else $bg = ($i % 2 === 0) ? ' style="background:#172032"' : '';
 ?>
-<tr<?= $bg ?>><td style="font-family:inherit;<?= $light ? 'color:#7b2d8e' : 'color:#94a3b8' ?>;font-weight:400"><?= fmt_date($q2['d']) ?></td><td><?= fmt_time($q2['t']) ?></td><td><?= htmlspecialchars($q2['c']) ?></td><td><?= htmlspecialchars($q2['b']) ?></td><td><?= htmlspecialchars($q2['m']) ?></td></tr>
+<tr<?= $bg ?>><td style="font-family:inherit;<?= ($theme === 'light' && $s_param === 'oe8cni') ? 'color:#1e40af' : ($light ? 'color:#7b2d8e' : 'color:#94a3b8') ?>;font-weight:400"><?= fmt_date($q2['d']) ?></td><td><?= fmt_time($q2['t']) ?></td><td><?= htmlspecialchars($q2['c']) ?></td><td><?= htmlspecialchars($q2['b']) ?></td><td><?= htmlspecialchars($q2['m']) ?></td></tr>
 <?php endforeach; ?>
 </tbody>
 </table>
@@ -170,9 +201,9 @@ button{background:#3b82f6;border:none;border-radius:8px;padding:8px 16px;color:#
 <?php elseif ($error): ?>
 <div class="st"><?= htmlspecialchars($error) ?></div>
 <?php elseif (empty($results)): ?>
-<div class="st">Kein QSO mit <strong style="color:#f1f5f9"><?= htmlspecialchars($q) ?></strong> gefunden.</div>
+<div class="st">Kein QSO mit <strong style="color:<?= $light ? '#1e293b' : '#f1f5f9' ?>"><?= htmlspecialchars($q) ?></strong> gefunden.</div>
 <?php else: ?>
-<div class="st"><?= count($results) === 1 ? '1 Callsign' : count($results).' Callsigns' ?> für <strong style="color:#f1f5f9"><?= htmlspecialchars($q) ?></strong></div>
+<div class="st"><?= count($results) === 1 ? '1 Callsign' : count($results).' Callsigns' ?> für <strong style="color:<?= $light ? '#1e293b' : '#f1f5f9' ?>"><?= htmlspecialchars($q) ?></strong></div>
 <div class="card">
 <div class="ch"><?= count($results) === 1 ? '1 Callsign' : count($results).' Callsigns' ?> für <?= htmlspecialchars($q) ?></div>
 <table>

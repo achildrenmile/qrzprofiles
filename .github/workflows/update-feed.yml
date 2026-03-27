@@ -396,6 +396,92 @@ jobs:
           print("Generated docs/qso-map-oe8jota.png")
           PYEOF
 
+      - name: Generate OE8CNI search index
+        env:
+          WAVELOG_API_KEY: ${{ secrets.WAVELOG_API_KEY }}
+        run: |
+          python3 << 'PYEOF'
+          import urllib.request, json, re, os
+          from datetime import datetime, timezone
+
+          API_KEY    = os.environ.get("WAVELOG_API_KEY", "")
+          BASE_URL   = "https://wavelog.oeradio.at/index.php/api"
+          STATION_ID = 14
+
+          def api_get(path):
+              req = urllib.request.Request(f"{BASE_URL}/{path}", headers={"User-Agent": "QRZ-Widget-Bot"})
+              with urllib.request.urlopen(req, timeout=30) as r:
+                  return json.loads(r.read().decode())
+
+          def api_post(path, data):
+              body = json.dumps(data).encode()
+              req = urllib.request.Request(f"{BASE_URL}/{path}", data=body,
+                  headers={"Content-Type": "application/json", "User-Agent": "QRZ-Widget-Bot"})
+              with urllib.request.urlopen(req, timeout=60) as r:
+                  return json.loads(r.read().decode())
+
+          def adif_field(record, tag):
+              m = re.search(rf'<{tag}:\d+>([^\r\n<]+)', record, re.IGNORECASE)
+              return m.group(1).strip() if m else ""
+
+          try:
+              stats = api_get(f"statistics/{API_KEY}/{STATION_ID}")
+          except Exception as e:
+              print(f"Failed to fetch OE8CNI stats: {e}"); exit(1)
+
+          total = int(stats.get("total_qsos", 0))
+
+          try:
+              all_resp = api_post("get_contacts_adif", {
+                  "key": API_KEY, "station_id": STATION_ID,
+                  "fetchfromid": 0, "limit": 25000
+              })
+          except Exception as e:
+              print(f"Failed to fetch OE8CNI QSOs: {e}"); exit(1)
+
+          all_adif = all_resp.get("adif", "")
+          all_qsos = []
+          index    = {}
+          dxcc_set = set()
+
+          for rec in all_adif.split("<EOR>"):
+              call = adif_field(rec, "CALL")
+              if not call: continue
+              date  = adif_field(rec, "QSO_DATE")
+              band  = adif_field(rec, "BAND")
+              mode  = adif_field(rec, "MODE")
+              time  = adif_field(rec, "TIME_ON")
+              dxcc  = adif_field(rec, "DXCC")
+              rst_s = adif_field(rec, "RST_SENT")
+              rst_r = adif_field(rec, "RST_RCVD")
+              all_qsos.append({"call": call, "date": date, "time": time, "band": band, "mode": mode})
+              cu = call.upper()
+              if cu not in index: index[cu] = []
+              index[cu].append([date, band, mode, rst_s, rst_r])
+              if dxcc: dxcc_set.add(dxcc)
+
+          for cu in index:
+              index[cu].sort(key=lambda x: x[0], reverse=True)
+
+          updated = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%MZ")
+
+          idx_obj  = {"u": updated, "t": total, "q": index}
+          idx_json = json.dumps(idx_obj, separators=(',', ':'))
+          with open("docs/wavelog-index-oe8cni.json", "w", encoding="utf-8") as f:
+              f.write(idx_json)
+
+          all_qsos.sort(key=lambda x: x['date'] + x['time'])
+          recent = list(reversed(all_qsos[-10:]))
+
+          stats_obj  = {"total": total, "dxcc": len(dxcc_set), "updated": updated,
+              "recent": [{"c": q["call"], "d": q["date"], "t": q["time"], "b": q["band"], "m": q["mode"]} for q in recent]}
+          stats_json = json.dumps(stats_obj, separators=(',', ':'))
+          with open("docs/wavelog-stats-oe8cni.json", "w", encoding="utf-8") as f:
+              f.write(stats_json)
+
+          print(f"Generated OE8CNI index ({len(index):,} unique calls, total={total}, dxcc={len(dxcc_set)})")
+          PYEOF
+
       - name: Generate OE8CNI QSO map
         env:
           WAVELOG_API_KEY: ${{ secrets.WAVELOG_API_KEY }}
@@ -602,7 +688,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/feed-widget.html docs/wavelog-widget.html docs/wavelog-index.json docs/wavelog-stats.json docs/wavelog-index-oe8jota.json docs/wavelog-stats-oe8jota.json docs/qso-map.png docs/qso-map-oe8jota.png docs/qso-map-oe8cni.png docs/oe8yml-sig.png
+          git add docs/feed-widget.html docs/wavelog-widget.html docs/wavelog-index.json docs/wavelog-stats.json docs/wavelog-index-oe8jota.json docs/wavelog-stats-oe8jota.json docs/wavelog-index-oe8cni.json docs/wavelog-stats-oe8cni.json docs/qso-map.png docs/qso-map-oe8jota.png docs/qso-map-oe8cni.png docs/oe8yml-sig.png
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
