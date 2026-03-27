@@ -398,13 +398,13 @@ jobs:
 
       - name: Generate OE8CNI search index
         env:
-          WAVELOG_API_KEY: ${{ secrets.WAVELOG_API_KEY }}
+          WAVELOG_API_KEY_CNI: ${{ secrets.WAVELOG_API_KEY_CNI }}
         run: |
           python3 << 'PYEOF'
           import urllib.request, json, re, os
           from datetime import datetime, timezone
 
-          API_KEY    = os.environ.get("WAVELOG_API_KEY", "")
+          API_KEY    = os.environ.get("WAVELOG_API_KEY_CNI", "")
           BASE_URL   = "https://wavelog.oeradio.at/index.php/api"
           STATION_ID = 14
 
@@ -484,7 +484,7 @@ jobs:
 
       - name: Generate OE8CNI QSO map
         env:
-          WAVELOG_API_KEY: ${{ secrets.WAVELOG_API_KEY }}
+          WAVELOG_API_KEY_CNI: ${{ secrets.WAVELOG_API_KEY_CNI }}
         run: |
           pip install matplotlib cartopy --quiet
           python3 << 'PYEOF'
@@ -516,7 +516,7 @@ jobs:
                   return lat, lon
               except: return None, None
 
-          API_KEY = os.environ.get("WAVELOG_API_KEY", "")
+          API_KEY = os.environ.get("WAVELOG_API_KEY_CNI", "")
           BASE_URL = "https://wavelog.oeradio.at/index.php/api"
           body = json.dumps({"key": API_KEY, "station_id": 14, "fetchfromid": 0, "limit": 25000}).encode()
           req = urllib.request.Request(f"{BASE_URL}/get_contacts_adif", data=body,
